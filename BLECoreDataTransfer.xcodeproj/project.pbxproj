@@ -13,6 +13,12 @@
 		A02FCE401E5BB9090022E1C9 /* BLECoreDataTransfer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A02FCE3E1E5BB9090022E1C9 /* BLECoreDataTransfer.xcdatamodeld */; };
 		A02FCE421E5BB9090022E1C9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A02FCE411E5BB9090022E1C9 /* Assets.xcassets */; };
 		A02FCE451E5BB9090022E1C9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A02FCE431E5BB9090022E1C9 /* LaunchScreen.storyboard */; };
+		A02FCE4D1E5BBF9F0022E1C9 /* CentralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02FCE4C1E5BBF9F0022E1C9 /* CentralViewController.swift */; };
+		A02FCE501E5BC1300022E1C9 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A02FCE4F1E5BC1300022E1C9 /* CoreBluetooth.framework */; };
+		A02FCE521E5BCB390022E1C9 /* TransferService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02FCE511E5BCB390022E1C9 /* TransferService.swift */; };
+		A02FCE541E5CD7DC0022E1C9 /* PeripheralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02FCE531E5CD7DC0022E1C9 /* PeripheralViewController.swift */; };
+		A02FCE561E5D15E00022E1C9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A02FCE551E5D15E00022E1C9 /* Foundation.framework */; };
+		A02FCE581E5E13640022E1C9 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02FCE571E5E13640022E1C9 /* Utils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +30,12 @@
 		A02FCE411E5BB9090022E1C9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A02FCE441E5BB9090022E1C9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A02FCE461E5BB9090022E1C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A02FCE4C1E5BBF9F0022E1C9 /* CentralViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CentralViewController.swift; sourceTree = "<group>"; };
+		A02FCE4F1E5BC1300022E1C9 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		A02FCE511E5BCB390022E1C9 /* TransferService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferService.swift; sourceTree = "<group>"; };
+		A02FCE531E5CD7DC0022E1C9 /* PeripheralViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PeripheralViewController.swift; path = ../PeripheralViewController.swift; sourceTree = "<group>"; };
+		A02FCE551E5D15E00022E1C9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		A02FCE571E5E13640022E1C9 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +43,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A02FCE561E5D15E00022E1C9 /* Foundation.framework in Frameworks */,
+				A02FCE501E5BC1300022E1C9 /* CoreBluetooth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +56,7 @@
 			children = (
 				A02FCE361E5BB9090022E1C9 /* BLECoreDataTransfer */,
 				A02FCE351E5BB9090022E1C9 /* Products */,
+				A02FCE4E1E5BC1300022E1C9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -63,8 +78,21 @@
 				A02FCE431E5BB9090022E1C9 /* LaunchScreen.storyboard */,
 				A02FCE461E5BB9090022E1C9 /* Info.plist */,
 				A02FCE3E1E5BB9090022E1C9 /* BLECoreDataTransfer.xcdatamodeld */,
+				A02FCE4C1E5BBF9F0022E1C9 /* CentralViewController.swift */,
+				A02FCE531E5CD7DC0022E1C9 /* PeripheralViewController.swift */,
+				A02FCE511E5BCB390022E1C9 /* TransferService.swift */,
+				A02FCE571E5E13640022E1C9 /* Utils.swift */,
 			);
 			path = BLECoreDataTransfer;
+			sourceTree = "<group>";
+		};
+		A02FCE4E1E5BC1300022E1C9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A02FCE551E5D15E00022E1C9 /* Foundation.framework */,
+				A02FCE4F1E5BC1300022E1C9 /* CoreBluetooth.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -99,7 +127,13 @@
 				TargetAttributes = {
 					A02FCE331E5BB9090022E1C9 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = E5647WEN98;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -139,8 +173,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A02FCE521E5BCB390022E1C9 /* TransferService.swift in Sources */,
 				A02FCE3A1E5BB9090022E1C9 /* ViewController.swift in Sources */,
 				A02FCE381E5BB9090022E1C9 /* AppDelegate.swift in Sources */,
+				A02FCE581E5E13640022E1C9 /* Utils.swift in Sources */,
+				A02FCE4D1E5BBF9F0022E1C9 /* CentralViewController.swift in Sources */,
+				A02FCE541E5CD7DC0022E1C9 /* PeripheralViewController.swift in Sources */,
 				A02FCE401E5BB9090022E1C9 /* BLECoreDataTransfer.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -207,7 +245,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -250,7 +288,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -262,6 +300,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = E5647WEN98;
 				INFOPLIST_FILE = BLECoreDataTransfer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslightingcontrols.BLECoreDataTransfer;
@@ -274,6 +313,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = E5647WEN98;
 				INFOPLIST_FILE = BLECoreDataTransfer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslightingcontrols.BLECoreDataTransfer;
