@@ -17,6 +17,22 @@ class CentralViewController: UIViewController, CBCentralManagerDelegate, CBPerip
     private var data: NSMutableData?
     private var discoveredPeripheral: CBPeripheral?
     
+    static var isRunningBackground = false
+    
+    var minRSSI : Int {
+        get {
+            var result = -127
+            
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                result = CentralViewController.isRunningBackground ? -40 : -35
+            } else if UIDevice.current.userInterfaceIdiom == .pad {
+                result = CentralViewController.isRunningBackground ? -60 : -40
+            }
+            
+            return result
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -55,8 +71,9 @@ class CentralViewController: UIViewController, CBCentralManagerDelegate, CBPerip
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         let rssiString = String(format: "%1.2f", RSSI.floatValue)
-        print("\(Utils.getCurrentTime()) - did discover peripheral: \(peripheral.identifier.uuidString), data: \(advertisementData), RSSI: \(rssiString)")
-        if RSSI.intValue > -15 || RSSI.intValue < -35 {
+//        print("\(Utils.getCurrentTime()) - did discover peripheral: \(peripheral.identifier.uuidString), data: \(advertisementData), RSSI: \(rssiString)")
+        print("\(Utils.getCurrentTime()) - did discover peripheral: \(peripheral), data: \(advertisementData), RSSI: \(rssiString)")
+        if RSSI.intValue > -15 || RSSI.intValue < self.minRSSI {
             return
         }
         
@@ -159,7 +176,7 @@ class CentralViewController: UIViewController, CBCentralManagerDelegate, CBPerip
                 peripheral.setNotifyValue(false, for: characteristic)
                 
                 // and disconnect from the peripheral
-                self.centralManager?.cancelPeripheralConnection(peripheral)
+//                self.centralManager?.cancelPeripheralConnection(peripheral)
             }
             
             // Otherwise, just add the data on to what we already have
