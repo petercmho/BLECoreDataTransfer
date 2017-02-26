@@ -19,6 +19,8 @@
 		A02FCE541E5CD7DC0022E1C9 /* PeripheralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02FCE531E5CD7DC0022E1C9 /* PeripheralViewController.swift */; };
 		A02FCE561E5D15E00022E1C9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A02FCE551E5D15E00022E1C9 /* Foundation.framework */; };
 		A02FCE581E5E13640022E1C9 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02FCE571E5E13640022E1C9 /* Utils.swift */; };
+		A0C42F891E62A58800B1773A /* Central.rtf in Resources */ = {isa = PBXBuildFile; fileRef = A0C42F871E62A58800B1773A /* Central.rtf */; };
+		A0C42F8A1E62A58800B1773A /* Peripheral.rtf in Resources */ = {isa = PBXBuildFile; fileRef = A0C42F881E62A58800B1773A /* Peripheral.rtf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,8 @@
 		A02FCE531E5CD7DC0022E1C9 /* PeripheralViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PeripheralViewController.swift; path = ../PeripheralViewController.swift; sourceTree = "<group>"; };
 		A02FCE551E5D15E00022E1C9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A02FCE571E5E13640022E1C9 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		A0C42F871E62A58800B1773A /* Central.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Central.rtf; path = "BLECoreDataTransfer/Debugging messages/Central.rtf"; sourceTree = "<group>"; };
+		A0C42F881E62A58800B1773A /* Peripheral.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Peripheral.rtf; path = "BLECoreDataTransfer/Debugging messages/Peripheral.rtf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +58,7 @@
 		A02FCE2B1E5BB9090022E1C9 = {
 			isa = PBXGroup;
 			children = (
+				A0C42F861E62A55F00B1773A /* Debugging Messages */,
 				A02FCE361E5BB9090022E1C9 /* BLECoreDataTransfer */,
 				A02FCE351E5BB9090022E1C9 /* Products */,
 				A02FCE4E1E5BC1300022E1C9 /* Frameworks */,
@@ -93,6 +98,15 @@
 				A02FCE4F1E5BC1300022E1C9 /* CoreBluetooth.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A0C42F861E62A55F00B1773A /* Debugging Messages */ = {
+			isa = PBXGroup;
+			children = (
+				A0C42F871E62A58800B1773A /* Central.rtf */,
+				A0C42F881E62A58800B1773A /* Peripheral.rtf */,
+			);
+			name = "Debugging Messages";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -161,7 +175,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				A02FCE451E5BB9090022E1C9 /* LaunchScreen.storyboard in Resources */,
+				A0C42F8A1E62A58800B1773A /* Peripheral.rtf in Resources */,
 				A02FCE421E5BB9090022E1C9 /* Assets.xcassets in Resources */,
+				A0C42F891E62A58800B1773A /* Central.rtf in Resources */,
 				A02FCE3D1E5BB9090022E1C9 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
