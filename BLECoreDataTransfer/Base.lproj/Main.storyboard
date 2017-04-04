@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="99K-ZJ-4NU">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="99K-ZJ-4NU">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -38,6 +38,12 @@
                                     <segue destination="cmL-Zn-Slk" kind="show" identifier="showPeripheralIdentifier" id="7u0-2U-xoV"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7K9-sn-7J2">
+                                <rect key="frame" x="154" y="403" width="67" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Edit Data"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -48,10 +54,43 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Select Mode" id="ZNm-1W-es5"/>
+                    <connections>
+                        <segue destination="2zh-GQ-9Y8" kind="show" id="H9P-eV-v9f"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1076" y="138.98050974512745"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="wxj-JG-Y0k">
+            <objects>
+                <viewController id="2zh-GQ-9Y8" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="FyQ-Xx-hcg"/>
+                        <viewControllerLayoutGuide type="bottom" id="s05-bB-72B"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="9An-BP-4l3">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="oi4-0J-ifX">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="oi4-0J-ifX" firstAttribute="leading" secondItem="9An-BP-4l3" secondAttribute="leadingMargin" constant="-16" id="AoT-2c-VKk"/>
+                            <constraint firstItem="oi4-0J-ifX" firstAttribute="top" secondItem="FyQ-Xx-hcg" secondAttribute="bottom" constant="-64" id="HvA-HU-n7B"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="oi4-0J-ifX" secondAttribute="trailing" constant="-16" id="eUP-AP-5zd"/>
+                            <constraint firstItem="s05-bB-72B" firstAttribute="top" secondItem="oi4-0J-ifX" secondAttribute="bottom" id="lor-15-lsX"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hNm-Fh-Vok" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1076" y="889.20539730134942"/>
         </scene>
         <!--Peripheral-->
         <scene sceneID="bCB-Oi-KeG">
