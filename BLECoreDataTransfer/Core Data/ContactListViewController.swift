@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class ContactListViewController: UIViewController, NSFetchedResultsControllerDelegate {
+class ContactListViewController: UIViewController, NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate {
 
     lazy var managedObjectContext: NSManagedObjectContext = {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -37,7 +37,16 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        var entityDescription = NSEntityDescription.entity(forEntityName: "PersonEntity", in: self.managedObjectContext)
         var person: PersonEntity
+        
+        do {
+            try self.fetchedResultsController.performFetch()
+        } catch {
+            
+        }
+        
+        
         
         // Do any additional setup after loading the view.
     }
@@ -47,7 +56,27 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         // Dispose of any resources that can be recreated.
     }
     
-
+    // NSFetchedResultsControllerDelegate
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        
+    }
+    
+    // UITableViewSource
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return self.fetchedResultsController.sections?.count ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if self.fetchedResultsController.sections?.count ?? 0 > 0 {
+            return self.fetchedResultsController.sections?[section].numberOfObjects ?? 0
+        }
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell()
+    }
+    
     /*
     // MARK: - Navigation
 
