@@ -20,6 +20,7 @@
 		A02FCE561E5D15E00022E1C9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A02FCE551E5D15E00022E1C9 /* Foundation.framework */; };
 		A02FCE581E5E13640022E1C9 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02FCE571E5E13640022E1C9 /* Utils.swift */; };
 		A073F1971E98014100BA0231 /* ContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A073F1961E98014100BA0231 /* ContactTableViewCell.swift */; };
+		A073F1991E9812FB00BA0231 /* ContactDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A073F1981E9812FB00BA0231 /* ContactDetailsViewController.swift */; };
 		A07722B21E93130500BDA803 /* ContactListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07722B11E93130500BDA803 /* ContactListViewController.swift */; };
 		A07722BD1E9425F800BDA803 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07722BC1E9425F800BDA803 /* CoreData.framework */; };
 		A0C42F891E62A58800B1773A /* Central.rtf in Resources */ = {isa = PBXBuildFile; fileRef = A0C42F871E62A58800B1773A /* Central.rtf */; };
@@ -42,6 +43,7 @@
 		A02FCE551E5D15E00022E1C9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A02FCE571E5E13640022E1C9 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		A073F1961E98014100BA0231 /* ContactTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactTableViewCell.swift; path = "Core Data/ContactTableViewCell.swift"; sourceTree = "<group>"; };
+		A073F1981E9812FB00BA0231 /* ContactDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactDetailsViewController.swift; path = "Core Data/ContactDetailsViewController.swift"; sourceTree = "<group>"; };
 		A07722B11E93130500BDA803 /* ContactListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactListViewController.swift; path = "Core Data/ContactListViewController.swift"; sourceTree = "<group>"; };
 		A07722BC1E9425F800BDA803 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		A0C42F871E62A58800B1773A /* Central.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Central.rtf; path = "BLECoreDataTransfer/Debugging messages/Central.rtf"; sourceTree = "<group>"; };
@@ -114,6 +116,8 @@
 			children = (
 				A07722B71E94246000BDA803 /* Managed Objects */,
 				A07722B11E93130500BDA803 /* ContactListViewController.swift */,
+				A073F1961E98014100BA0231 /* ContactTableViewCell.swift */,
+				A073F1981E9812FB00BA0231 /* ContactDetailsViewController.swift */,
 			);
 			name = "Core Data";
 			sourceTree = "<group>";
@@ -121,7 +125,6 @@
 		A07722B71E94246000BDA803 /* Managed Objects */ = {
 			isa = PBXGroup;
 			children = (
-				A073F1961E98014100BA0231 /* ContactTableViewCell.swift */,
 			);
 			name = "Managed Objects";
 			sourceTree = "<group>";
@@ -215,6 +218,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A073F1991E9812FB00BA0231 /* ContactDetailsViewController.swift in Sources */,
 				A02FCE521E5BCB390022E1C9 /* TransferService.swift in Sources */,
 				A07722B21E93130500BDA803 /* ContactListViewController.swift in Sources */,
 				A02FCE3A1E5BB9090022E1C9 /* ViewController.swift in Sources */,

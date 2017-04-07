@@ -57,12 +57,7 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         // Dispose of any resources that can be recreated.
     }
     
-    // NSFetchedResultsControllerDelegate
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        
-    }
-    
-    // UITableViewSource
+    // MARK: - UITableViewSource
     func numberOfSections(in tableView: UITableView) -> Int {
         return self.fetchedResultsController.sections?.count ?? 0
     }
@@ -76,20 +71,75 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "contactIdentifier", for: indexPath) as! ContactTableViewCell
-        if let record = fetchedResultsController.object(at: indexPath) as? PersonEntity {
-            cell.contact.text = "\(record.firstName) \(record.lastName)"
+        if let record = fetchedResultsController.object(at: indexPath) as? PersonEntity,
+            let firstName = record.firstName,   
+            let lastName = record.lastName {
+            cell.contact.text = "\(firstName) \(lastName)"
         }
         return cell
     }
     
-    /*
+    // MARK: - Actions
+    
+    @IBAction func addNewContact(_ sender: Any) {
+        performSegue(withIdentifier: "showContactDetailsIdentifier", sender: sender)
+    }
+    
+    @IBAction func unwindToContactList(sender: UIStoryboardSegue) {
+        print("ContactListViewController.unwindToContactList")
+    }
+    
+    // MARK: - NSFetchedResultsControllerDelegate
+    
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.beginUpdates()
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.endUpdates()
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .insert:
+            if let indexPath = newIndexPath {
+                tableView.insertRows(at: [indexPath], with: .fade)
+            }
+        case .delete:
+            if let indexPath = indexPath {
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+        case .update:
+            if let indexPath = indexPath,
+                let cell = tableView.cellForRow(at: indexPath) as? ContactTableViewCell,
+                let contact = fetchedResultsController.object(at: indexPath) as? PersonEntity,
+                let firstName = contact.firstName,
+                let lastName = contact.lastName {
+                cell.contact.text = "\(firstName) \(lastName)"
+            }
+        case .move:
+            if let indexPath = indexPath {
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+            if let newIndexPath = newIndexPath {
+                tableView.insertRows(at: [newIndexPath], with: .fade)
+            }
+        }
+    }
+    
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        if segue.identifier == "showContactDetailsIdentifier" {
+            if let destination = segue.destination as? ContactDetailsViewController {
+                destination.managedObjectContext = self.managedObjectContext
+            }
+        }
     }
-    */
+    
 
 }

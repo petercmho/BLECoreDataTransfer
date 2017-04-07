@@ -63,7 +63,7 @@
             </objects>
             <point key="canvasLocation" x="1076" y="138.98050974512745"/>
         </scene>
-        <!--Contact List View Controller-->
+        <!--Contacts-->
         <scene sceneID="wxj-JG-Y0k">
             <objects>
                 <viewController id="2zh-GQ-9Y8" customClass="ContactListViewController" customModule="BLECoreDataTransfer" customModuleProvider="target" sceneMemberID="viewController">
@@ -83,7 +83,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PiR-0Z-pvN" id="FII-xN-GPR">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BG3-x3-mK5">
@@ -121,13 +121,78 @@
                             <constraint firstItem="s05-bB-72B" firstAttribute="top" secondItem="oi4-0J-ifX" secondAttribute="bottom" id="lor-15-lsX"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="Contacts" id="WmD-Yt-aXF">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Gvc-Bc-XCz">
+                            <connections>
+                                <action selector="addNewContact:" destination="2zh-GQ-9Y8" id="Acb-Rn-Fda"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="oi4-0J-ifX" id="nOc-kb-mQU"/>
+                        <segue destination="R3y-gq-nor" kind="show" identifier="showContactDetailsIdentifier" id="EkR-3X-gZC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hNm-Fh-Vok" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1076" y="889.20539730134942"/>
+        </scene>
+        <!--Contact Details-->
+        <scene sceneID="mML-M0-igv">
+            <objects>
+                <viewController id="R3y-gq-nor" customClass="ContactDetailsViewController" customModule="BLECoreDataTransfer" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="d6C-0J-bBX"/>
+                        <viewControllerLayoutGuide type="bottom" id="nHR-kD-lIW"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Hue-MM-mp6">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="First Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WL0-W7-603">
+                                <rect key="frame" x="99" y="89" width="176" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="176" id="J9L-3W-p1c"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="V3S-eX-eRA">
+                                <rect key="frame" x="99" y="142" width="176" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="176" id="CT6-gm-Z2W"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="WL0-W7-603" firstAttribute="top" secondItem="d6C-0J-bBX" secondAttribute="bottom" constant="25" id="AR0-E6-VbX"/>
+                            <constraint firstItem="WL0-W7-603" firstAttribute="centerX" secondItem="Hue-MM-mp6" secondAttribute="centerX" id="fqg-za-bQG"/>
+                            <constraint firstItem="V3S-eX-eRA" firstAttribute="centerX" secondItem="Hue-MM-mp6" secondAttribute="centerX" id="g7D-2I-SOc"/>
+                            <constraint firstItem="V3S-eX-eRA" firstAttribute="top" secondItem="WL0-W7-603" secondAttribute="bottom" constant="23" id="gB4-U7-YmH"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Contact Details" id="qEG-Xd-mga">
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="K9f-OZ-YQZ">
+                            <connections>
+                                <action selector="saveContactDetails:" destination="R3y-gq-nor" id="z3e-7x-wFw"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="firstNameTextField" destination="WL0-W7-603" id="7y1-cd-akA"/>
+                        <outlet property="lastNameTextField" destination="V3S-eX-eRA" id="bEq-mE-SRu"/>
+                        <segue destination="GWB-az-sGk" kind="unwind" identifier="backSegueIdentifier" unwindAction="unwindToContactListWithSender:" id="rtV-8O-DPu"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LdO-a8-BZp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="GWB-az-sGk" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="1076" y="1601.649175412294"/>
         </scene>
         <!--Peripheral-->
         <scene sceneID="bCB-Oi-KeG">
