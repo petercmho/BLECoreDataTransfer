@@ -7,12 +7,38 @@
 //
 
 import UIKit
+import CoreData
 
-class ContactListViewController: UIViewController {
+class ContactListViewController: UIViewController, NSFetchedResultsControllerDelegate {
 
+    lazy var managedObjectContext: NSManagedObjectContext = {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let persistentContainer = appDelegate.persistentContainer
+        
+        return persistentContainer.viewContext
+    }()
+    
+    lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> = {
+        // Initialize Fetch Request
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PersonEntity")
+        
+        // Add Sort Descriptors
+        let sortDescriptor = NSSortDescriptor(key: "firstName", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        
+        // Initialize fetched results controller
+        let fetchedResultsController = NSFetchedResultsController<NSFetchRequestResult>(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        
+        // Configure fetched results controller
+        fetchedResultsController.delegate = self
+        
+        return fetchedResultsController
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        var person: PersonEntity
+        
         // Do any additional setup after loading the view.
     }
 
