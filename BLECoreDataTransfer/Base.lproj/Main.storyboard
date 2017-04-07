@@ -38,9 +38,8 @@
                                     <segue destination="cmL-Zn-Slk" kind="show" identifier="showPeripheralIdentifier" id="7u0-2U-xoV"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7K9-sn-7J2">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7K9-sn-7J2">
                                 <rect key="frame" x="154" y="403" width="67" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Edit Data"/>
                                 <connections>
@@ -51,7 +50,9 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="R3e-yZ-KFA" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="104" id="FVy-VM-tVw"/>
+                            <constraint firstItem="7K9-sn-7J2" firstAttribute="top" secondItem="gcs-b5-iJf" secondAttribute="bottom" constant="87" id="IuU-M9-5RP"/>
                             <constraint firstItem="gcs-b5-iJf" firstAttribute="top" secondItem="R3e-yZ-KFA" secondAttribute="bottom" constant="88" id="S08-IQ-EUb"/>
+                            <constraint firstItem="7K9-sn-7J2" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="fUK-jS-qp7"/>
                             <constraint firstItem="gcs-b5-iJf" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="gCi-ba-7yX"/>
                             <constraint firstItem="R3e-yZ-KFA" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="t0W-Oe-3sS"/>
                         </constraints>
@@ -62,10 +63,10 @@
             </objects>
             <point key="canvasLocation" x="1076" y="138.98050974512745"/>
         </scene>
-        <!--View Controller-->
+        <!--Contact List View Controller-->
         <scene sceneID="wxj-JG-Y0k">
             <objects>
-                <viewController id="2zh-GQ-9Y8" sceneMemberID="viewController">
+                <viewController id="2zh-GQ-9Y8" customClass="ContactListViewController" customModule="BLECoreDataTransfer" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="FyQ-Xx-hcg"/>
                         <viewControllerLayoutGuide type="bottom" id="s05-bB-72B"/>
@@ -78,15 +79,38 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="PiR-0Z-pvN">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="contactIdentifier" id="PiR-0Z-pvN" customClass="ContactTableViewCell" customModule="BLECoreDataTransfer" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PiR-0Z-pvN" id="FII-xN-GPR">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BG3-x3-mK5">
+                                                    <rect key="frame" x="8" y="11" width="209" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="209" id="bpc-7T-WzL"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="BG3-x3-mK5" firstAttribute="top" secondItem="FII-xN-GPR" secondAttribute="topMargin" constant="3" id="4wp-5F-sHW"/>
+                                                <constraint firstAttribute="leadingMargin" secondItem="BG3-x3-mK5" secondAttribute="leading" id="DCN-ek-XZy"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="BG3-x3-mK5" secondAttribute="bottom" constant="3.5" id="aaI-X3-f2u"/>
+                                            </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="contact" destination="BG3-x3-mK5" id="B54-4Z-jAL"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="2zh-GQ-9Y8" id="hwY-Os-xeD"/>
+                                    <outlet property="delegate" destination="2zh-GQ-9Y8" id="ylA-yw-qru"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -97,6 +121,9 @@
                             <constraint firstItem="s05-bB-72B" firstAttribute="top" secondItem="oi4-0J-ifX" secondAttribute="bottom" id="lor-15-lsX"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="oi4-0J-ifX" id="nOc-kb-mQU"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hNm-Fh-Vok" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

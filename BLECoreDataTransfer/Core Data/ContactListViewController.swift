@@ -11,6 +11,8 @@ import CoreData
 
 class ContactListViewController: UIViewController, NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate {
 
+    @IBOutlet weak var tableView: UITableView!
+    
     lazy var managedObjectContext: NSManagedObjectContext = {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let persistentContainer = appDelegate.persistentContainer
@@ -43,10 +45,9 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         do {
             try self.fetchedResultsController.performFetch()
         } catch {
-            
+            let fetchError = error as NSError
+            print("\(fetchError), \(fetchError.userInfo)")
         }
-        
-        
         
         // Do any additional setup after loading the view.
     }
@@ -74,7 +75,11 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: "contactIdentifier", for: indexPath) as! ContactTableViewCell
+        if let record = fetchedResultsController.object(at: indexPath) as? PersonEntity {
+            cell.contact.text = "\(record.firstName) \(record.lastName)"
+        }
+        return cell
     }
     
     /*

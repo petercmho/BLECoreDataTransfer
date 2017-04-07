@@ -19,6 +19,7 @@
 		A02FCE541E5CD7DC0022E1C9 /* PeripheralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02FCE531E5CD7DC0022E1C9 /* PeripheralViewController.swift */; };
 		A02FCE561E5D15E00022E1C9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A02FCE551E5D15E00022E1C9 /* Foundation.framework */; };
 		A02FCE581E5E13640022E1C9 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02FCE571E5E13640022E1C9 /* Utils.swift */; };
+		A073F1971E98014100BA0231 /* ContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A073F1961E98014100BA0231 /* ContactTableViewCell.swift */; };
 		A07722B21E93130500BDA803 /* ContactListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07722B11E93130500BDA803 /* ContactListViewController.swift */; };
 		A07722BD1E9425F800BDA803 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07722BC1E9425F800BDA803 /* CoreData.framework */; };
 		A0C42F891E62A58800B1773A /* Central.rtf in Resources */ = {isa = PBXBuildFile; fileRef = A0C42F871E62A58800B1773A /* Central.rtf */; };
@@ -40,6 +41,7 @@
 		A02FCE531E5CD7DC0022E1C9 /* PeripheralViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PeripheralViewController.swift; path = ../PeripheralViewController.swift; sourceTree = "<group>"; };
 		A02FCE551E5D15E00022E1C9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A02FCE571E5E13640022E1C9 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		A073F1961E98014100BA0231 /* ContactTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactTableViewCell.swift; path = "Core Data/ContactTableViewCell.swift"; sourceTree = "<group>"; };
 		A07722B11E93130500BDA803 /* ContactListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactListViewController.swift; path = "Core Data/ContactListViewController.swift"; sourceTree = "<group>"; };
 		A07722BC1E9425F800BDA803 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		A0C42F871E62A58800B1773A /* Central.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Central.rtf; path = "BLECoreDataTransfer/Debugging messages/Central.rtf"; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 		A07722B71E94246000BDA803 /* Managed Objects */ = {
 			isa = PBXGroup;
 			children = (
+				A073F1961E98014100BA0231 /* ContactTableViewCell.swift */,
 			);
 			name = "Managed Objects";
 			sourceTree = "<group>";
@@ -164,7 +167,7 @@
 				TargetAttributes = {
 					A02FCE331E5BB9090022E1C9 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = DXP699E3A7;
+						DevelopmentTeam = 853Y92H4N6;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -218,6 +221,7 @@
 				A02FCE381E5BB9090022E1C9 /* AppDelegate.swift in Sources */,
 				A02FCE581E5E13640022E1C9 /* Utils.swift in Sources */,
 				A02FCE4D1E5BBF9F0022E1C9 /* CentralViewController.swift in Sources */,
+				A073F1971E98014100BA0231 /* ContactTableViewCell.swift in Sources */,
 				A02FCE541E5CD7DC0022E1C9 /* PeripheralViewController.swift in Sources */,
 				A02FCE401E5BB9090022E1C9 /* BLECoreDataTransfer.xcdatamodeld in Sources */,
 			);
@@ -340,7 +344,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = DXP699E3A7;
+				DEVELOPMENT_TEAM = 853Y92H4N6;
 				INFOPLIST_FILE = BLECoreDataTransfer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslightingcontrols.BLECoreDataTransfer;
@@ -354,7 +358,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = DXP699E3A7;
+				DEVELOPMENT_TEAM = 853Y92H4N6;
 				INFOPLIST_FILE = BLECoreDataTransfer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslightingcontrols.BLECoreDataTransfer;
