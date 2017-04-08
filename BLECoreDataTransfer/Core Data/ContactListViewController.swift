@@ -8,10 +8,19 @@
 
 import UIKit
 import CoreData
+import CoreBluetooth
 
-class ContactListViewController: UIViewController, NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate {
+class ContactListViewController: UIViewController, NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate, CBPeripheralManagerDelegate {
 
     @IBOutlet weak var tableView: UITableView!
+    
+    private lazy var peripheralManager: CBPeripheralManager = {
+        return CBPeripheralManager(delegate: self, queue: nil)
+    }()
+    
+    private lazy var contactTransferCharacteristic: CBMutableCharacteristic = {
+        return CBMutableCharacteristic(type: CBUUID(string: TransferService.ContactsTransferCharacteristicUUID), properties: .notify, value: nil, permissions: .readable)
+    }()
     
     lazy var managedObjectContext: NSManagedObjectContext = {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -39,9 +48,6 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        var entityDescription = NSEntityDescription.entity(forEntityName: "PersonEntity", in: self.managedObjectContext)
-        var person: PersonEntity
-        
         do {
             try self.fetchedResultsController.performFetch()
         } catch {
@@ -89,6 +95,20 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         print("ContactListViewController.unwindToContactList")
     }
     
+    @IBAction func sendCoreData(_ sender: Any) {
+        // Start with the service
+        let contactsTransferService = CBMutableService(type: CBUUID(string: TransferService.ContactsTransferServiceUUID), primary: true)
+        
+        // Add the characteristic to the service
+        contactsTransferService.characteristics = [self.contactTransferCharacteristic]
+        
+        // And add it to the peripheral manager
+        self.peripheralManager.add(contactsTransferService)
+    }
+    
+    @IBAction func receiveCoreData(_ sender: Any) {
+    }
+    
     // MARK: - NSFetchedResultsControllerDelegate
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
@@ -127,6 +147,13 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         }
     }
     
+    // MARK: - CBPeripheralManagerDelegate
+    
+    func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
+        if peripheral.state != .poweredOn {
+            return
+        }
+    }
     
     // MARK: - Navigation
 

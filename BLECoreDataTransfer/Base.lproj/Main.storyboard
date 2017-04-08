@@ -76,14 +76,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="oi4-0J-ifX">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="592"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="contactIdentifier" id="PiR-0Z-pvN" customClass="ContactTableViewCell" customModule="BLECoreDataTransfer" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PiR-0Z-pvN" id="FII-xN-GPR">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BG3-x3-mK5">
@@ -112,13 +112,40 @@
                                     <outlet property="delegate" destination="2zh-GQ-9Y8" id="ylA-yw-qru"/>
                                 </connections>
                             </tableView>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="60" translatesAutoresizingMaskIntoConstraints="NO" id="xCN-Zt-HqA">
+                                <rect key="frame" x="87" y="617" width="200" height="30"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R54-Wi-PBf">
+                                        <rect key="frame" x="0.0" y="0.0" width="70" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="70" id="iyp-g7-IfF"/>
+                                        </constraints>
+                                        <state key="normal" title="Send"/>
+                                        <connections>
+                                            <action selector="sendCoreData:" destination="2zh-GQ-9Y8" eventType="touchUpInside" id="szd-Bh-50a"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n0q-0y-UIo">
+                                        <rect key="frame" x="130" y="0.0" width="70" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="70" id="VG4-6G-79j"/>
+                                        </constraints>
+                                        <state key="normal" title="Receive"/>
+                                        <connections>
+                                            <action selector="receiveCoreData:" destination="2zh-GQ-9Y8" eventType="touchUpInside" id="sdw-n7-qUh"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="xCN-Zt-HqA" firstAttribute="centerX" secondItem="9An-BP-4l3" secondAttribute="centerX" id="0IX-cj-Zyy"/>
+                            <constraint firstItem="xCN-Zt-HqA" firstAttribute="top" secondItem="oi4-0J-ifX" secondAttribute="bottom" constant="25" id="7Ld-kD-cdY"/>
                             <constraint firstItem="oi4-0J-ifX" firstAttribute="leading" secondItem="9An-BP-4l3" secondAttribute="leadingMargin" constant="-16" id="AoT-2c-VKk"/>
                             <constraint firstItem="oi4-0J-ifX" firstAttribute="top" secondItem="FyQ-Xx-hcg" secondAttribute="bottom" constant="-64" id="HvA-HU-n7B"/>
+                            <constraint firstItem="s05-bB-72B" firstAttribute="top" secondItem="xCN-Zt-HqA" secondAttribute="bottom" constant="20" id="XNi-UB-RIp"/>
                             <constraint firstAttribute="trailingMargin" secondItem="oi4-0J-ifX" secondAttribute="trailing" constant="-16" id="eUP-AP-5zd"/>
-                            <constraint firstItem="s05-bB-72B" firstAttribute="top" secondItem="oi4-0J-ifX" secondAttribute="bottom" id="lor-15-lsX"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Contacts" id="WmD-Yt-aXF">
@@ -192,7 +219,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LdO-a8-BZp" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="GWB-az-sGk" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1076" y="1601.649175412294"/>
+            <point key="canvasLocation" x="1076" y="1630"/>
         </scene>
         <!--Peripheral-->
         <scene sceneID="bCB-Oi-KeG">
