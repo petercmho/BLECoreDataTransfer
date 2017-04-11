@@ -1,3 +1,4 @@
+
 //
 //  ContactListViewController.swift
 //  BLECoreDataTransfer
@@ -10,13 +11,21 @@ import UIKit
 import CoreData
 import CoreBluetooth
 
-class ContactListViewController: UIViewController, NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate, CBPeripheralManagerDelegate {
+class ContactListViewController: UIViewController, NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate, CBPeripheralManagerDelegate, CBCentralManagerDelegate, CBPeripheralDelegate {
+    
+    static var isRunningBackground = false
 
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var sendButton: UIButton!
+    @IBOutlet weak var receiveButton: UIButton!
     
-    private lazy var peripheralManager: CBPeripheralManager = {
-        return CBPeripheralManager(delegate: self, queue: nil)
-    }()
+//    private lazy var peripheralManager: CBPeripheralManager = {
+//        return CBPeripheralManager(delegate: self, queue: nil)
+//    }()
+    
+    private var peripheralManager: CBPeripheralManager!
+    private var centralManager: CBCentralManager!
+    private var discoverdPeripheral: CBPeripheral!
     
     private lazy var contactTransferCharacteristic: CBMutableCharacteristic = {
         return CBMutableCharacteristic(type: CBUUID(string: TransferService.ContactsTransferCharacteristicUUID), properties: .notify, value: nil, permissions: .readable)
@@ -46,6 +55,20 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         return fetchedResultsController
     }()
     
+    var minRSSI: Int {
+        get {
+            var result = -127
+            
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                result = ContactListViewController.isRunningBackground ? -40 : -35
+            } else if UIDevice.current.userInterfaceIdiom == .pad {
+                result = ContactListViewController.isRunningBackground ? -60 : -40
+            }
+            
+            return result
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         do {
@@ -56,6 +79,16 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         }
         
         // Do any additional setup after loading the view.
+        self.peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
+        self.centralManager = CBCentralManager(delegate: self, queue: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        if self.peripheralManager.isAdvertising {
+            self.peripheralManager.stopAdvertising()
+        }
+        
+        super.viewWillDisappear(animated)
     }
 
     override func didReceiveMemoryWarning() {
@@ -96,17 +129,13 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     }
     
     @IBAction func sendCoreData(_ sender: Any) {
-        // Start with the service
-        let contactsTransferService = CBMutableService(type: CBUUID(string: TransferService.ContactsTransferServiceUUID), primary: true)
-        
-        // Add the characteristic to the service
-        contactsTransferService.characteristics = [self.contactTransferCharacteristic]
-        
-        // And add it to the peripheral manager
-        self.peripheralManager.add(contactsTransferService)
+        if !self.peripheralManager.isAdvertising {
+            self.peripheralManager.startAdvertising([CBAdvertisementDataServiceUUIDsKey : [CBUUID(string: TransferService.ContactsTransferServiceUUID)]])
+        }
     }
     
     @IBAction func receiveCoreData(_ sender: Any) {
+        scan()
     }
     
     // MARK: - NSFetchedResultsControllerDelegate
@@ -152,6 +181,88 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         if peripheral.state != .poweredOn {
             return
+        }
+        
+        // Start with the service
+        let contactsTransferService = CBMutableService(type: CBUUID(string: TransferService.ContactsTransferServiceUUID), primary: true)
+        
+        // Add the characteristic to the service
+        contactsTransferService.characteristics = [self.contactTransferCharacteristic]
+        
+        // And add it to the peripheral manager
+        self.peripheralManager.add(contactsTransferService)
+        
+        self.sendButton.isEnabled = true
+    }
+    
+    func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
+        print("ContactListViewController.peripheralManager:central:didSubscribeTo:")
+    }
+    
+    // MARK: - CBCentralManagerDelegate
+    
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        if central.state != .poweredOn {
+            return
+        }
+        
+        self.receiveButton.isEnabled = true
+    }
+    
+    func scan() {
+        self.centralManager.scanForPeripherals(withServices: [CBUUID(string: TransferService.ContactsTransferServiceUUID)], options: [CBCentralManagerScanOptionAllowDuplicatesKey : true])
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        if RSSI.intValue > -15 || RSSI.intValue < self.minRSSI {
+            return
+        }
+        
+        if self.discoverdPeripheral != peripheral {
+            self.discoverdPeripheral = peripheral
+            self.centralManager.connect(peripheral, options: nil)
+        }
+    }
+    
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        print("\(Utils.getCurrentTime()) - Failed to connect to \(peripheral). (\(error?.localizedDescription))")
+    }
+    
+    func cleanup() {
+        print("\(Utils.getCurrentTime()) - cleanup")
+    }
+    
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        print("\(Utils.getCurrentTime()) - centralManager(_ \(central) :didConnect \(peripheral)) - Peripheral connected")
+        
+        // Stop scanning
+        self.centralManager.stopScan()
+        print("\(Utils.getCurrentTime()) - Scanning stopped")
+        
+        // Make sure we get the discovery callbacks
+        peripheral.delegate = self
+        
+        // Search only fro services that match our UUID
+        peripheral.discoverServices([CBUUID(string: TransferService.ContactsTransferServiceUUID)])
+    }
+    
+    // MARK: - CBPeripheralDelegate
+    
+    /* The transfer service was discovered */
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        print("\(Utils.getCurrentTime()) - peripheral(_:didDiscoverServices:)")
+        if let discoverError = error {
+            print("\(Utils.getCurrentTime()) - Error discovering services: \(discoverError.localizedDescription)")
+            self.cleanup()
+            return
+        }
+        
+        // Discover the characteristic we want...
+        // Loop through the newly filled peripheral.service array, just in case there's more than one.
+        if let services = peripheral.services, services != nil {
+            for service in services {
+                
+            }
         }
     }
     

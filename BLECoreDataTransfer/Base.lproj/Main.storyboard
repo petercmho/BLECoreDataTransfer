@@ -83,7 +83,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PiR-0Z-pvN" id="FII-xN-GPR">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BG3-x3-mK5">
@@ -115,7 +115,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="60" translatesAutoresizingMaskIntoConstraints="NO" id="xCN-Zt-HqA">
                                 <rect key="frame" x="87" y="617" width="200" height="30"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R54-Wi-PBf">
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R54-Wi-PBf">
                                         <rect key="frame" x="0.0" y="0.0" width="70" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="70" id="iyp-g7-IfF"/>
@@ -125,7 +125,7 @@
                                             <action selector="sendCoreData:" destination="2zh-GQ-9Y8" eventType="touchUpInside" id="szd-Bh-50a"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n0q-0y-UIo">
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n0q-0y-UIo">
                                         <rect key="frame" x="130" y="0.0" width="70" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="70" id="VG4-6G-79j"/>
@@ -156,6 +156,8 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="receiveButton" destination="n0q-0y-UIo" id="k0J-hA-QTb"/>
+                        <outlet property="sendButton" destination="R54-Wi-PBf" id="Lzg-nQ-zWW"/>
                         <outlet property="tableView" destination="oi4-0J-ifX" id="nOc-kb-mQU"/>
                         <segue destination="R3y-gq-nor" kind="show" identifier="showContactDetailsIdentifier" id="EkR-3X-gZC"/>
                     </connections>
