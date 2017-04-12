@@ -196,7 +196,12 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     }
     
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
-        print("ContactListViewController.peripheralManager:central:didSubscribeTo:")
+        print("\(Utils.getCurrentTime()) - peripheralManager(_ \(peripheral) :central \(central) :didSubscribeTo: \(characteristic)) - Central subscribed to characteristic")
+    }
+    
+    /* More space in the peripheral's transmit queue becomes available, resend the update. */
+    func peripheralManagerIsReady(toUpdateSubscribers peripheral: CBPeripheralManager) {
+        print("\(Utils.getCurrentTime()) - peripheralManagerIsReady(toUpdateSubscribers \(peripheral))")
     }
     
     // MARK: - CBCentralManagerDelegate
@@ -218,10 +223,13 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             return
         }
         
+        print("\(Utils.getCurrentTime()) - centralManager(_ \(central) didDiscover: \(peripheral) advertisementData: \(advertisementData) rssi: \(RSSI))")
         if self.discoverdPeripheral != peripheral {
             self.discoverdPeripheral = peripheral
+            print("   \(Utils.getCurrentTime()) - centralManager.connect(peripheral, nil)")
             self.centralManager.connect(peripheral, options: nil)
         }
+        print("\(Utils.getCurrentTime()) - centralManager(_:didDiscover:advertisementData:rssi:) end")
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
@@ -244,11 +252,12 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         
         // Search only fro services that match our UUID
         peripheral.discoverServices([CBUUID(string: TransferService.ContactsTransferServiceUUID)])
+        print("\(Utils.getCurrentTime()) - centralManager(_:didConnect:) end")
     }
     
     // MARK: - CBPeripheralDelegate
     
-    /* The transfer service was discovered */
+    /* The transfer service was discovered.  Once this has been found, we want to subscribe to it, which lets the peripheral know we want the data it contains. */
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         print("\(Utils.getCurrentTime()) - peripheral(_:didDiscoverServices:)")
         if let discoverError = error {
@@ -259,10 +268,53 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         
         // Discover the characteristic we want...
         // Loop through the newly filled peripheral.service array, just in case there's more than one.
-        if let services = peripheral.services, services != nil {
+        if let services = peripheral.services {
             for service in services {
-                
+                peripheral.discoverCharacteristics([CBUUID(string: TransferService.ContactsTransferCharacteristicUUID)], for: service)
             }
+        }
+        print("\(Utils.getCurrentTime()) - peripheral(_:didDiscoverServices:) end")
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        print("\(Utils.getCurrentTime()) - peripheral(_:didDiscoverCharacteristicsFor:error:)")
+        // Deal with errors (if any)
+        if let discoverError = error {
+            print("Error discovering characteristics: \(discoverError.localizedDescription)")
+            self.cleanup()
+            return
+        }
+        
+        // Again, we loop through the array, just in case.
+        guard let characteristics = service.characteristics else {
+            return
+        }
+        for characteristic in characteristics {
+            if characteristic.uuid.isEqual(CBUUID(string: TransferService.ContactsTransferCharacteristicUUID)) {
+                // If it is, subscribe to it
+                print("   peripheral.setNotifyValue(true, for: \(characteristic)")
+                peripheral.setNotifyValue(true, for: characteristic)
+            }
+        }
+        print("\(Utils.getCurrentTime()) - peripheral(_:didDiscoverCharacteristicsFor:error:) end")
+    }
+    
+    /* This callback lets us know more data has arrived via notification on the characteristic. */
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        print("\(Utils.getCurrentTime()) - peripheral(_ \(peripheral) : didUpdateValueFor \(characteristic) : error \(error)")
+    }
+    
+    /* The peripheral letting us know whether our subscribe/unsubscribe happened or not. */
+    func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
+        print("\(Utils.getCurrentTime()) - peripheral(_ \(peripheral) : didUpdateNotificationStateFor \(characteristic) : error \(error)")
+    }
+    
+    /* If the central is no longer available, peripheral:didModifyServices: will be called. */
+    func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
+        print("\(Utils.getCurrentTime()) - peripheral(_:didModifyServices:)")
+        
+        for service in invalidatedServices {
+            print("   Invalidated service - \(service)")
         }
     }
     
