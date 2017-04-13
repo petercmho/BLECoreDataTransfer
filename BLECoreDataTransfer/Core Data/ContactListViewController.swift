@@ -29,7 +29,9 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     private var discoverdPeripheral: CBPeripheral!
     
     private var contactToSend: Data?
+    private var contactToReceive: Data?
     private var sendContactIndex: Int = 0
+    private var receiveContactIndex: Int = 0
     
     private lazy var contactTransferCharacteristic: CBMutableCharacteristic = {
         return CBMutableCharacteristic(type: CBUUID(string: TransferService.ContactsTransferCharacteristicUUID), properties: .notify, value: nil, permissions: .readable)
@@ -140,6 +142,9 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     
     @IBAction func receiveCoreData(_ sender: Any) {
         scan()
+        
+        self.receiveContactIndex = 0
+        self.contactToReceive = Data()
     }
     
     // MARK: - NSFetchedResultsControllerDelegate
@@ -207,9 +212,10 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
                 return
         }
         
-        var contactPacket = ContactPacket(id: contact.id, firstName: contact.firstName!, lastName: contact.lastName!, age: contact.age, email: contact.email!, gender: contact.gender)
+        let contactPacket = ContactPacket(id: contact.id, firstName: contact.firstName!, lastName: contact.lastName!, age: contact.age, email: contact.email!, gender: contact.gender)
         var contactPacketData = NSKeyedArchiver.archivedData(withRootObject: contactPacket)
-        self.contactToSend = Data(bytes: &contactPacketData.count, count: 1)
+        var contactPacketSize = contactPacketData.count + MemoryLayout<Int>.size
+        self.contactToSend = Data(bytes: &contactPacketSize, count: 1)
         self.contactToSend!.append(contactPacketData)
         self.sendContactIndex = 0
         
@@ -359,11 +365,55 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     /* This callback lets us know more data has arrived via notification on the characteristic. */
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         print("\(Utils.getCurrentTime()) - peripheral(_ \(peripheral) : didUpdateValueFor \(characteristic) : error \(String(describing: error))")
+        if let updateError = error {
+            print("\(Utils.getCurrentTime()) - Error discovering characteristics: \(updateError.localizedDescription)")
+            return
+        }
+        
+        guard var dataReceived = self.contactToReceive else {
+            return
+        }
+        
+        if let cValue = characteristic.value {
+            dataReceived.append(cValue)
+        }
+        
+        var count = dataReceived.withUnsafeBytes { (ptr: UnsafePointer<Int>) -> Int in
+            return ptr.pointee
+        }
+        
+        if count == dataReceived.count {
+            // Reconstruct contact from data
+            let contactPacketData = dataReceived.subdata(in: MemoryLayout<Int>.size..<dataReceived.count)
+            let contactPacket = NSKeyedUnarchiver.unarchiveObject(with: contactPacketData)
+            
+            print("contactPacket is \(contactPacket)")
+            peripheral.setNotifyValue(false, for: characteristic)
+        }
     }
     
     /* The peripheral letting us know whether our subscribe/unsubscribe happened or not. */
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
         print("\(Utils.getCurrentTime()) - peripheral(_ \(peripheral) : didUpdateNotificationStateFor \(characteristic) : error \(String(describing: error))")
+        if let notificationError = error {
+            print("Error changing notification state: \(notificationError.localizedDescription)")
+        }
+        
+        // Exit if it is not the transfer characteristic
+        if !characteristic.uuid.isEqual(CBUUID(string: TransferService.ContactsTransferCharacteristicUUID)) {
+            return
+        }
+        
+        if characteristic.isNotifying {
+            // Notification has started
+            print("Notification began on \(characteristic)")
+        }
+        else {
+            // Notification has stopped
+            // so disconnect from the peripheral
+            print("Notification stopped on \(characteristic).  Disconnecting...")
+            self.centralManager.cancelPeripheralConnection(peripheral)
+        }
     }
     
     /* If the central is no longer available, peripheral:didModifyServices: will be called. */

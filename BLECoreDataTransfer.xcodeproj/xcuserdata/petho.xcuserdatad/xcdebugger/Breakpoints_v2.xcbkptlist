@@ -234,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BLECoreDataTransfer/Core Data/ContactListViewController.swift"
-            timestampString = "513555415.697783"
+            timestampString = "513801582.22192"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "171"
-            endingLineNumber = "171"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
             landmarkName = "controller(_:didChange:at:for:newIndexPath:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -266,11 +266,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BLECoreDataTransfer/Core Data/ContactListViewController.swift"
-            timestampString = "513555423.014102"
+            timestampString = "513801582.22192"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "161"
-            endingLineNumber = "161"
+            startingLineNumber = "166"
+            endingLineNumber = "166"
             landmarkName = "controller(_:didChange:at:for:newIndexPath:)"
             landmarkType = "7">
             <Locations>
@@ -282,12 +282,12 @@
                   moduleName = "BLECoreDataTransfer"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/petho/Programs/CoreBluetooth/BLECoreDataTransfer/BLECoreDataTransfer/Core%20Data/ContactListViewController.swift"
-                  timestampString = "513648627.375216"
+                  timestampString = "513812338.377789"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "162"
-                  endingLineNumber = "162"
-                  offsetFromSymbolStart = "836">
+                  startingLineNumber = "167"
+                  endingLineNumber = "167"
+                  offsetFromSymbolStart = "472">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -297,12 +297,12 @@
                   moduleName = "BLECoreDataTransfer"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/petho/Programs/CoreBluetooth/BLECoreDataTransfer/BLECoreDataTransfer/Core%20Data/ContactListViewController.swift"
-                  timestampString = "513648627.376457"
+                  timestampString = "513812338.378875"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "162"
-                  endingLineNumber = "162"
-                  offsetFromSymbolStart = "876">
+                  startingLineNumber = "167"
+                  endingLineNumber = "167"
+                  offsetFromSymbolStart = "512">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -314,11 +314,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BLECoreDataTransfer/Core Data/ContactListViewController.swift"
-            timestampString = "513647341.763557"
+            timestampString = "513812338.166393"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "218"
-            endingLineNumber = "218"
+            startingLineNumber = "225"
+            endingLineNumber = "225"
             landmarkName = "ContactListViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -330,11 +330,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BLECoreDataTransfer/Core Data/ContactListViewController.swift"
-            timestampString = "513647341.763557"
+            timestampString = "513812338.166393"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "227"
-            endingLineNumber = "227"
+            startingLineNumber = "235"
+            endingLineNumber = "235"
             landmarkName = "sendContact()"
             landmarkType = "7">
          </BreakpointContent>
@@ -346,11 +346,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BLECoreDataTransfer/Core Data/ContactListViewController.swift"
-            timestampString = "513647472.572336"
+            timestampString = "513801582.22192"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "138"
-            endingLineNumber = "138"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
             landmarkName = "sendCoreData(_:)"
             landmarkType = "7">
          </BreakpointContent>
