@@ -207,8 +207,9 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
                 return
         }
         
-        let contactPacket = ContactPacket(id: contact.id, firstName: contact.firstName!, lastName: contact.lastName!, age: contact.age, email: contact.email!, gender: contact.gender)
-        self.contactToSend = NSKeyedArchiver.archivedData(withRootObject: contactPacket)
+        var contactPacket = ContactPacket(id: contact.id, firstName: contact.firstName!, lastName: contact.lastName!, age: contact.age, email: contact.email!, gender: contact.gender)
+        self.contactToSend = Data(buffer: UnsafeBufferPointer(start: &contactPacket, count: 1))
+        self.contactToSend!.append(NSKeyedArchiver.archivedData(withRootObject: contactPacket))
         self.sendContactIndex = 0
         
         sendContact()
@@ -228,9 +229,9 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             return
         }
         
-        var doSend = true
+        var didSend = true
         
-        while doSend {
+        while didSend {
             var amountToSend = dataToSend.count - self.sendContactIndex
             
             if amountToSend > ContactListViewController.NotifyMTU {
@@ -238,8 +239,23 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             }
             
             // Copy out the data we want
+            let chunk = dataToSend.subdata(in: self.sendContactIndex..<self.sendContactIndex+amountToSend)
             
+            // Send it
+            didSend = peripheralContactManager.updateValue(chunk, for: self.contactTransferCharacteristic, onSubscribedCentrals: nil)
             
+            // If it didn't work, drop out and wait for peripheralManagerIsReady(toUpdateSubscribers:) callback
+            if !didSend { return }
+            
+            print("\(Utils.getCurrentTime()) - Sent: \(chunk)")
+            
+            // It did send, so update our index
+            self.sendContactIndex += amountToSend
+            
+            // Was it the last one?
+            if self.sendContactIndex >= dataToSend.count {
+                return
+            }
         }
     }
     
