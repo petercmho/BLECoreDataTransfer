@@ -154,7 +154,7 @@ class PeripheralViewController: UIViewController, CBPeripheralManagerDelegate, U
             if !didSend { return }
             
             let stringFromData = String(data: chunk as Data, encoding: .utf8)
-            print("\(Utils.getCurrentTime()) - Sent: \(stringFromData)")
+            print("\(Utils.getCurrentTime()) - Sent: \(String(describing: stringFromData))")
             
             // It did send, so update our index
             self.sendDataIndex += amountToSend

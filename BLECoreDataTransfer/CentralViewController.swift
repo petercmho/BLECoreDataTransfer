@@ -77,7 +77,7 @@ class CentralViewController: UIViewController, CBCentralManagerDelegate, CBPerip
             return
         }
         
-        print("\(Utils.getCurrentTime()) - Discovered \(peripheral.name) at \(RSSI)")
+        print("\(Utils.getCurrentTime()) - Discovered \(String(describing: peripheral.name)) at \(RSSI)")
         
         if self.discoveredPeripheral != peripheral {
             self.discoveredPeripheral = peripheral
@@ -87,7 +87,7 @@ class CentralViewController: UIViewController, CBCentralManagerDelegate, CBPerip
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        print("\(Utils.getCurrentTime()) - Failed to connect to \(peripheral). (\(error?.localizedDescription)")
+        print("\(Utils.getCurrentTime()) - Failed to connect to \(peripheral). (\(String(describing: error?.localizedDescription))")
         self.cleanup()
     }
     
@@ -158,7 +158,7 @@ class CentralViewController: UIViewController, CBCentralManagerDelegate, CBPerip
     /* This callback lets us know more data has arrived via notification on the characteristic
      */
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        print("\(Utils.getCurrentTime()) - peripheral(_ \(peripheral) :didUpdateValueFor \(characteristic) : \(error))")
+        print("\(Utils.getCurrentTime()) - peripheral(_ \(peripheral) :didUpdateValueFor \(characteristic) : \(String(describing: error)))")
         if let updateError = error {
             print("\(Utils.getCurrentTime()) - Error discovering characteristics: \(updateError.localizedDescription)")
             return
@@ -183,14 +183,14 @@ class CentralViewController: UIViewController, CBCentralManagerDelegate, CBPerip
             self.data?.append(cValue)
             
             // Log it
-            print("\(Utils.getCurrentTime()) - Received: \(stringFromData)")
+            print("\(Utils.getCurrentTime()) - Received: \(String(describing: stringFromData))")
         }
     }
     
     /* The peripheral letting us know whether our subscribe/unsubscribe happened or not
     */
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
-        print("\(Utils.getCurrentTime()) - peripheral(_ \(peripheral) :didUpdateNotificationStateFor \(characteristic) : \(error))")
+        print("\(Utils.getCurrentTime()) - peripheral(_ \(peripheral) :didUpdateNotificationStateFor \(characteristic) : \(String(describing: error)))")
         if let notificationError = error {
             print("Error changing notification state: \(notificationError.localizedDescription)")
         }
@@ -216,7 +216,7 @@ class CentralViewController: UIViewController, CBCentralManagerDelegate, CBPerip
     /* Once the disconnection happens, we need to clean up our local copy of the peripheral
     */
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        print("\(Utils.getCurrentTime()) - centralManager(_ \(central) :didDisconnectPeripheral \(peripheral) : \(error)) - Peripheral Disconnected")
+        print("\(Utils.getCurrentTime()) - centralManager(_ \(central) :didDisconnectPeripheral \(peripheral) : \(String(describing: error))) - Peripheral Disconnected")
         self.discoveredPeripheral = nil
         
         // We're disconnected, so start scanning again
