@@ -319,8 +319,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "218"
             endingLineNumber = "218"
-            landmarkName = "scan()"
-            landmarkType = "7">
+            landmarkName = "ContactListViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -335,7 +335,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "227"
             endingLineNumber = "227"
-            landmarkName = "centralManager(_:didDiscover:advertisementData:rssi:)"
+            landmarkName = "sendContact()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -351,7 +351,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "138"
             endingLineNumber = "138"
-            landmarkName = "receiveCoreData(_:)"
+            landmarkName = "sendCoreData(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

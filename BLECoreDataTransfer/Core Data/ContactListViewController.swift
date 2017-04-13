@@ -208,8 +208,9 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         }
         
         var contactPacket = ContactPacket(id: contact.id, firstName: contact.firstName!, lastName: contact.lastName!, age: contact.age, email: contact.email!, gender: contact.gender)
-        self.contactToSend = Data(buffer: UnsafeBufferPointer(start: &contactPacket, count: 1))
-        self.contactToSend!.append(NSKeyedArchiver.archivedData(withRootObject: contactPacket))
+        var contactPacketData = NSKeyedArchiver.archivedData(withRootObject: contactPacket)
+        self.contactToSend = Data(bytes: &contactPacketData.count, count: 1)
+        self.contactToSend!.append(contactPacketData)
         self.sendContactIndex = 0
         
         sendContact()
@@ -218,6 +219,7 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     /* More space in the peripheral's transmit queue becomes available, resend the update. */
     func peripheralManagerIsReady(toUpdateSubscribers peripheral: CBPeripheralManager) {
         print("\(Utils.getCurrentTime()) - peripheralManagerIsReady(toUpdateSubscribers \(peripheral))")
+        sendContact()
     }
     
     func sendContact() {
