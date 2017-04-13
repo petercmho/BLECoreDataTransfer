@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A0170A951E9ECF0B00E50EB4 /* ContactPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0170A941E9ECF0B00E50EB4 /* ContactPacket.swift */; };
 		A02FCE381E5BB9090022E1C9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02FCE371E5BB9090022E1C9 /* AppDelegate.swift */; };
 		A02FCE3A1E5BB9090022E1C9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02FCE391E5BB9090022E1C9 /* ViewController.swift */; };
 		A02FCE3D1E5BB9090022E1C9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A02FCE3B1E5BB9090022E1C9 /* Main.storyboard */; };
@@ -28,6 +29,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A0170A941E9ECF0B00E50EB4 /* ContactPacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactPacket.swift; path = Transport/ContactPacket.swift; sourceTree = "<group>"; };
 		A02FCE341E5BB9090022E1C9 /* BLECoreDataTransfer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BLECoreDataTransfer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A02FCE371E5BB9090022E1C9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A02FCE391E5BB9090022E1C9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -64,6 +66,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A0170A931E9ECE9300E50EB4 /* Transport */ = {
+			isa = PBXGroup;
+			children = (
+				A0170A941E9ECF0B00E50EB4 /* ContactPacket.swift */,
+			);
+			name = Transport;
+			sourceTree = "<group>";
+		};
 		A02FCE2B1E5BB9090022E1C9 = {
 			isa = PBXGroup;
 			children = (
@@ -85,6 +95,7 @@
 		A02FCE361E5BB9090022E1C9 /* BLECoreDataTransfer */ = {
 			isa = PBXGroup;
 			children = (
+				A0170A931E9ECE9300E50EB4 /* Transport */,
 				A07722B01E93127100BDA803 /* Core Data */,
 				A02FCE371E5BB9090022E1C9 /* AppDelegate.swift */,
 				A02FCE391E5BB9090022E1C9 /* ViewController.swift */,
@@ -222,6 +233,7 @@
 				A02FCE521E5BCB390022E1C9 /* TransferService.swift in Sources */,
 				A07722B21E93130500BDA803 /* ContactListViewController.swift in Sources */,
 				A02FCE3A1E5BB9090022E1C9 /* ViewController.swift in Sources */,
+				A0170A951E9ECF0B00E50EB4 /* ContactPacket.swift in Sources */,
 				A02FCE381E5BB9090022E1C9 /* AppDelegate.swift in Sources */,
 				A02FCE581E5E13640022E1C9 /* Utils.swift in Sources */,
 				A02FCE4D1E5BBF9F0022E1C9 /* CentralViewController.swift in Sources */,

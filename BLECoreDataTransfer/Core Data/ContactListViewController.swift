@@ -14,6 +14,7 @@ import CoreBluetooth
 class ContactListViewController: UIViewController, NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate, CBPeripheralManagerDelegate, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     static var isRunningBackground = false
+    static let NotifyMTU = 20
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var sendButton: UIButton!
@@ -26,6 +27,9 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     private var peripheralManager: CBPeripheralManager!
     private var centralManager: CBCentralManager!
     private var discoverdPeripheral: CBPeripheral!
+    
+    private var contactToSend: Data?
+    private var sendContactIndex: Int = 0
     
     private lazy var contactTransferCharacteristic: CBMutableCharacteristic = {
         return CBMutableCharacteristic(type: CBUUID(string: TransferService.ContactsTransferCharacteristicUUID), properties: .notify, value: nil, permissions: .readable)
@@ -197,11 +201,46 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
         print("\(Utils.getCurrentTime()) - peripheralManager(_ \(peripheral) :central \(central) :didSubscribeTo: \(characteristic)) - Central subscribed to characteristic")
+        
+        guard let contact = fetchedResultsController.object(at: IndexPath(row: 0, section: 0)) as? PersonEntity
+        else {
+                return
+        }
+        
+        let contactPacket = ContactPacket(id: contact.id, firstName: contact.firstName!, lastName: contact.lastName!, age: contact.age, email: contact.email!, gender: contact.gender)
+        self.contactToSend = NSKeyedArchiver.archivedData(withRootObject: contactPacket)
+        self.sendContactIndex = 0
+        
+        sendContact()
     }
     
     /* More space in the peripheral's transmit queue becomes available, resend the update. */
     func peripheralManagerIsReady(toUpdateSubscribers peripheral: CBPeripheralManager) {
         print("\(Utils.getCurrentTime()) - peripheralManagerIsReady(toUpdateSubscribers \(peripheral))")
+    }
+    
+    func sendContact() {
+        guard let peripheralContactManager = self.peripheralManager,
+            let dataToSend = self.contactToSend
+            else { return }
+        
+        if self.sendContactIndex >= dataToSend.count {
+            return
+        }
+        
+        var doSend = true
+        
+        while doSend {
+            var amountToSend = dataToSend.count - self.sendContactIndex
+            
+            if amountToSend > ContactListViewController.NotifyMTU {
+                amountToSend = ContactListViewController.NotifyMTU
+            }
+            
+            // Copy out the data we want
+            
+            
+        }
     }
     
     // MARK: - CBCentralManagerDelegate
