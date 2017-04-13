@@ -272,7 +272,7 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        print("\(Utils.getCurrentTime()) - Failed to connect to \(peripheral). (\(error?.localizedDescription))")
+        print("\(Utils.getCurrentTime()) - Failed to connect to \(peripheral). (\(String(describing: error?.localizedDescription)))")
     }
     
     func cleanup() {
@@ -340,12 +340,12 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     
     /* This callback lets us know more data has arrived via notification on the characteristic. */
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        print("\(Utils.getCurrentTime()) - peripheral(_ \(peripheral) : didUpdateValueFor \(characteristic) : error \(error)")
+        print("\(Utils.getCurrentTime()) - peripheral(_ \(peripheral) : didUpdateValueFor \(characteristic) : error \(String(describing: error))")
     }
     
     /* The peripheral letting us know whether our subscribe/unsubscribe happened or not. */
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
-        print("\(Utils.getCurrentTime()) - peripheral(_ \(peripheral) : didUpdateNotificationStateFor \(characteristic) : error \(error)")
+        print("\(Utils.getCurrentTime()) - peripheral(_ \(peripheral) : didUpdateNotificationStateFor \(characteristic) : error \(String(describing: error))")
     }
     
     /* If the central is no longer available, peripheral:didModifyServices: will be called. */
