@@ -24,8 +24,33 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
 //        return CBPeripheralManager(delegate: self, queue: nil)
 //    }()
     
-    private var peripheralManager: CBPeripheralManager!
-    private var centralManager: CBCentralManager!
+    private var _peripheralManager: CBPeripheralManager? = nil
+    private var _centralManager: CBCentralManager? = nil
+    
+    private var peripheralManager: CBPeripheralManager {
+        get {
+            if self._centralManager != nil {
+                self._centralManager = nil
+            }
+            if self._peripheralManager == nil {
+                self._peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
+            }
+            
+            return self._peripheralManager!
+        }
+    }
+    private var centralManager: CBCentralManager {
+        get {
+            if self._peripheralManager != nil {
+                self._peripheralManager = nil
+            }
+            if self._centralManager == nil {
+                self._centralManager = CBCentralManager(delegate: self, queue: nil)
+            }
+            
+            return self._centralManager!
+        }
+    }
     private var discoverdPeripheral: CBPeripheral!
     
     private var contactToSend: Data?
@@ -85,13 +110,22 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         }
         
         // Do any additional setup after loading the view.
-        self.peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
-        self.centralManager = CBCentralManager(delegate: self, queue: nil)
+//        self.peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
+//        self.centralManager = CBCentralManager(delegate: self, queue: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        if self.peripheralManager.isAdvertising {
-            self.peripheralManager.stopAdvertising()
+        if self._peripheralManager != nil {
+            if self._peripheralManager!.isAdvertising {
+                self.peripheralManager.stopAdvertising()
+            }
+            self._peripheralManager?.delegate = nil
+            self._peripheralManager = nil
+        }
+        
+        if self._centralManager != nil {
+            self._centralManager?.delegate = nil
+            self._centralManager = nil
         }
         
         super.viewWillDisappear(animated)
@@ -188,6 +222,7 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     // MARK: - CBPeripheralManagerDelegate
     
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
+        print("peripheralManagerDidUpdateState( \(peripheral.state.rawValue) )")
         if peripheral.state != .poweredOn {
             return
         }
@@ -229,8 +264,7 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     }
     
     func sendContact() {
-        guard let peripheralContactManager = self.peripheralManager,
-            let dataToSend = self.contactToSend
+        guard let dataToSend = self.contactToSend
             else { return }
         
         if self.sendContactIndex >= dataToSend.count {
@@ -250,7 +284,7 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             let chunk = dataToSend.subdata(in: self.sendContactIndex..<self.sendContactIndex+amountToSend)
             
             // Send it
-            didSend = peripheralContactManager.updateValue(chunk, for: self.contactTransferCharacteristic, onSubscribedCentrals: nil)
+            didSend = peripheralManager.updateValue(chunk, for: self.contactTransferCharacteristic, onSubscribedCentrals: nil)
             
             // If it didn't work, drop out and wait for peripheralManagerIsReady(toUpdateSubscribers:) callback
             if !didSend { return }
@@ -270,6 +304,7 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     // MARK: - CBCentralManagerDelegate
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        print("centralManagerDidUpdateState( \(central.state.rawValue) )")
         if central.state != .poweredOn {
             return
         }
@@ -378,7 +413,7 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             dataReceived.append(cValue)
         }
         
-        var count = dataReceived.withUnsafeBytes { (ptr: UnsafePointer<Int>) -> Int in
+        let count = dataReceived.withUnsafeBytes { (ptr: UnsafePointer<Int>) -> Int in
             return ptr.pointee
         }
         
