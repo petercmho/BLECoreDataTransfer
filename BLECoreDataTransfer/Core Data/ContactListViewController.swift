@@ -170,6 +170,12 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     }
     
     @IBAction func sendCoreData(_ sender: Any) {
+        let testContact = ContactPacket(id: 0, firstName: "Peter", lastName: "Ho", age: 46, email: "petercmho@yahoo.ca", gender: true)
+        let testPacketData = NSKeyedArchiver.archivedData(withRootObject: testContact)
+        if let loadedContact = NSKeyedUnarchiver.unarchiveObject(with: testPacketData) as? ContactPacket {
+            print("\(loadedContact.firstName) \(loadedContact.lastName)")
+        }
+        
         self.sendButton.isEnabled = false
         self.receiveButton.isEnabled = false
         if self.peripheralManager.state ==  .poweredOn && !self.peripheralManager.isAdvertising {
