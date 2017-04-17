@@ -181,7 +181,7 @@
 				TargetAttributes = {
 					A02FCE331E5BB9090022E1C9 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 853Y92H4N6;
+						DevelopmentTeam = DXP699E3A7;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -360,7 +360,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 853Y92H4N6;
+				DEVELOPMENT_TEAM = DXP699E3A7;
 				INFOPLIST_FILE = BLECoreDataTransfer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslightingcontrols.BLECoreDataTransfer;
@@ -374,7 +374,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 853Y92H4N6;
+				DEVELOPMENT_TEAM = DXP699E3A7;
 				INFOPLIST_FILE = BLECoreDataTransfer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslightingcontrols.BLECoreDataTransfer;

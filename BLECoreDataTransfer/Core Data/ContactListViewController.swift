@@ -117,8 +117,9 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     override func viewWillDisappear(_ animated: Bool) {
         if self._peripheralManager != nil {
             if self._peripheralManager!.isAdvertising {
-                self.peripheralManager.stopAdvertising()
+                self._peripheralManager!.stopAdvertising()
             }
+            self._peripheralManager?.removeAllServices()
             self._peripheralManager?.delegate = nil
             self._peripheralManager = nil
         }
@@ -169,16 +170,25 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     }
     
     @IBAction func sendCoreData(_ sender: Any) {
-        if !self.peripheralManager.isAdvertising {
+        let testContact = ContactPacket(id: 0, firstName: "Peter", lastName: "Ho", age: 46, email: "petercmho@yahoo.ca", gender: true)
+        let testPacketData = NSKeyedArchiver.archivedData(withRootObject: testContact)
+        if let loadedContact = NSKeyedUnarchiver.unarchiveObject(with: testPacketData) as? ContactPacket {
+            print("\(loadedContact.firstName) \(loadedContact.lastName)")
+        }
+        
+        self.sendButton.isEnabled = false
+        self.receiveButton.isEnabled = false
+        if self.peripheralManager.state ==  .poweredOn && !self.peripheralManager.isAdvertising {
             self.peripheralManager.startAdvertising([CBAdvertisementDataServiceUUIDsKey : [CBUUID(string: TransferService.ContactsTransferServiceUUID)]])
         }
     }
     
     @IBAction func receiveCoreData(_ sender: Any) {
-        scan()
-        
-        self.receiveContactIndex = 0
-        self.contactToReceive = Data()
+        self.sendButton.isEnabled = false
+        self.receiveButton.isEnabled = false
+        if self.centralManager.state == .poweredOn {
+            scan()
+        }
     }
     
     // MARK: - NSFetchedResultsControllerDelegate
@@ -236,7 +246,12 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         // And add it to the peripheral manager
         self.peripheralManager.add(contactsTransferService)
         
-        self.sendButton.isEnabled = true
+//        self.peripheralManager.startAdvertising([CBAdvertisementDataServiceUUIDsKey : [CBUUID(string: TransferService.ContactsTransferServiceUUID)]])
+    }
+    
+    func peripheralManager(_ peripheral: CBPeripheralManager, didAdd service: CBService, error: Error?) {
+        print("\(Utils.getCurrentTime()) - peripheralManager(_ \(peripheral): didAdd: \(service) error: \(String(describing: error))")
+        self.peripheralManager.startAdvertising([CBAdvertisementDataServiceUUIDsKey : [CBUUID(string: TransferService.ContactsTransferServiceUUID)]])
     }
     
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
@@ -247,12 +262,17 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
                 return
         }
         
-        let contactPacket = ContactPacket(id: contact.id, firstName: contact.firstName!, lastName: contact.lastName!, age: contact.age, email: contact.email!, gender: contact.gender)
+//        let contactPacket = ContactPacket(id: contact.id, firstName: contact.firstName!, lastName: contact.lastName!, age: contact.age, email: contact.email!, gender: contact.gender)
+        let contactPacket = ContactPacket(id: contact.id, firstName: contact.firstName!, lastName: contact.lastName!, age: 46, email: "petercmho@yahoo.ca", gender: true)
         var contactPacketData = NSKeyedArchiver.archivedData(withRootObject: contactPacket)
         var contactPacketSize = contactPacketData.count + MemoryLayout<Int>.size
-        self.contactToSend = Data(bytes: &contactPacketSize, count: 1)
+        self.contactToSend = Data(bytes: &contactPacketSize, count: MemoryLayout<Int>.size)
         self.contactToSend!.append(contactPacketData)
         self.sendContactIndex = 0
+        
+        if let deserializedContact = NSKeyedUnarchiver.unarchiveObject(with: contactPacketData) as? ContactPacket {
+            print("\(deserializedContact.firstName) \(deserializedContact.lastName)")
+        }
         
         sendContact()
     }
@@ -296,6 +316,8 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             
             // Was it the last one?
             if self.sendContactIndex >= dataToSend.count {
+                self.sendButton.isEnabled = true
+                self.receiveButton.isEnabled = true
                 return
             }
         }
@@ -309,11 +331,14 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             return
         }
         
-        self.receiveButton.isEnabled = true
+        scan()
     }
     
     func scan() {
         self.centralManager.scanForPeripherals(withServices: [CBUUID(string: TransferService.ContactsTransferServiceUUID)], options: [CBCentralManagerScanOptionAllowDuplicatesKey : true])
+        
+        self.receiveContactIndex = 0
+        self.contactToReceive = Data()
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
@@ -405,24 +430,27 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             return
         }
         
-        guard var dataReceived = self.contactToReceive else {
+        if self.contactToReceive == nil {
             return
         }
         
         if let cValue = characteristic.value {
-            dataReceived.append(cValue)
+            self.contactToReceive!.append(cValue)
         }
         
-        let count = dataReceived.withUnsafeBytes { (ptr: UnsafePointer<Int>) -> Int in
+        let count = self.contactToReceive!.withUnsafeBytes { (ptr: UnsafePointer<Int>) -> Int in
             return ptr.pointee
         }
         
-        if count == dataReceived.count {
+        if count == self.contactToReceive!.count {
+            self.sendButton.isEnabled = true
+            self.receiveButton.isEnabled = true
+            
             // Reconstruct contact from data
-            let contactPacketData = dataReceived.subdata(in: MemoryLayout<Int>.size..<dataReceived.count)
+            let contactPacketData = self.contactToReceive!.subdata(in: MemoryLayout<Int>.size..<self.contactToReceive!.count)
             let contactPacket = NSKeyedUnarchiver.unarchiveObject(with: contactPacketData)
             
-            print("contactPacket is \(contactPacket)")
+            print("contactPacket is \(String(describing: contactPacket))")
             peripheral.setNotifyValue(false, for: characteristic)
         }
     }

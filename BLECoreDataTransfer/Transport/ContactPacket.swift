@@ -28,16 +28,19 @@ class ContactPacket: NSObject, NSCoding {
     required convenience init?(coder aDecoder: NSCoder) {
         guard let firstName = aDecoder.decodeObject(forKey: "firstName") as? String,
             let lastName = aDecoder.decodeObject(forKey: "lastName") as? String,
-            let email = aDecoder.decodeObject(forKey: "email") as? String
+            let email = aDecoder.decodeObject(forKey: "email") as? String,
+            let id = aDecoder.decodeObject(forKey: "id") as? Int32,
+            let age = aDecoder.decodeObject(forKey: "age") as? Int16,
+            let gender = aDecoder.decodeObject(forKey: "gender") as? Bool
             else { return nil }
         
         self.init(
-            id: aDecoder.decodeInt32(forKey: "id"),
+            id: id,
             firstName: firstName,
             lastName: lastName,
-            age: Int16(aDecoder.decodeInt32(forKey: "age")),
+            age: age,
             email: email,
-            gender: aDecoder.decodeBool(forKey: "gender")
+            gender: gender
         )
     }
     
