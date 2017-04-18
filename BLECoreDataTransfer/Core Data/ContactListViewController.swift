@@ -57,6 +57,8 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     private var contactToReceive: Data?
     private var sendContactIndex: Int = 0
     private var receiveContactIndex: Int = 0
+    private var receiveAlertView: UIAlertController?
+    private var receiveProgressView: UIProgressView?
     
     private lazy var contactTransferCharacteristic: CBMutableCharacteristic = {
         return CBMutableCharacteristic(type: CBUUID(string: TransferService.ContactsTransferCharacteristicUUID), properties: .notify, value: nil, permissions: .readable)
@@ -186,6 +188,19 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     @IBAction func receiveCoreData(_ sender: Any) {
         self.sendButton.isEnabled = false
         self.receiveButton.isEnabled = false
+        
+        self.receiveAlertView = UIAlertController(title: "Receiving contact(s)", message: "Waiting for sending device...", preferredStyle: .alert)
+        self.receiveAlertView?.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(self.receiveAlertView!, animated: true, completion: {
+            let margin:CGFloat = 8.0
+            let rect = CGRect(x: margin, y: 72.0, width: self.receiveAlertView!.view.frame.width - margin * 2.0, height: 2.0)
+            let progressView = UIProgressView(frame: rect)
+            progressView.progress = 0.0
+            progressView.tintColor = UIColor.blue
+            self.receiveProgressView = progressView
+            self.receiveAlertView?.view.addSubview(progressView)
+        })
+        
         if self.centralManager.state == .poweredOn {
             scan()
         }
@@ -370,6 +385,12 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         self.centralManager.stopScan()
         print("\(Utils.getCurrentTime()) - Scanning stopped")
         
+        guard let alertView = self.receiveAlertView
+            else { return }
+        
+        alertView.title = "Receiving from \(peripheral.name ?? "Unknown")"
+        alertView.message = "Calculating..."
+        
         // Make sure we get the discovery callbacks
         peripheral.delegate = self
         
@@ -442,13 +463,16 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             return ptr.pointee
         }
         
+        self.receiveAlertView.message = "Receiving"
+        self.receiveProgressView.progress = self.contactToReceive!.count / count
+        
         if count == self.contactToReceive!.count {
             self.sendButton.isEnabled = true
             self.receiveButton.isEnabled = true
             
             // Reconstruct contact from data
             let contactPacketData = self.contactToReceive!.subdata(in: MemoryLayout<Int>.size..<self.contactToReceive!.count)
-            let contactPacket = NSKeyedUnarchiver.unarchiveObject(with: contactPacketData)
+            let contactPacket = NSKeyedUnarchiver.unarchiveObject(with: contactPacketData) as? ContactPacket
             
             print("contactPacket is \(String(describing: contactPacket))")
             peripheral.setNotifyValue(false, for: characteristic)
