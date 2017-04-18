@@ -463,8 +463,8 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             return ptr.pointee
         }
         
-        self.receiveAlertView.message = "Receiving"
-        self.receiveProgressView.progress = self.contactToReceive!.count / count
+        self.receiveAlertView?.message = "Receiving"
+        self.receiveProgressView?.progress = Float(self.contactToReceive!.count / count)
         
         if count == self.contactToReceive!.count {
             self.sendButton.isEnabled = true
