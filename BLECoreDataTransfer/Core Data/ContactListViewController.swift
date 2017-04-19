@@ -57,6 +57,8 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     private var contactToReceive: Data?
     private var sendContactIndex: Int = 0
     private var receiveContactIndex: Int = 0
+    private var sendAlertView: UIAlertController?
+    private var sendProgressView: UIProgressView?
     private var receiveAlertView: UIAlertController?
     private var receiveProgressView: UIProgressView?
     
@@ -172,14 +174,27 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     }
     
     @IBAction func sendCoreData(_ sender: Any) {
-        let testContact = ContactPacket(id: 0, firstName: "Peter", lastName: "Ho", age: 46, email: "petercmho@yahoo.ca", gender: true)
-        let testPacketData = NSKeyedArchiver.archivedData(withRootObject: testContact)
-        if let loadedContact = NSKeyedUnarchiver.unarchiveObject(with: testPacketData) as? ContactPacket {
-            print("\(String(describing: loadedContact.firstName)) \(String(describing: loadedContact.lastName))")
-        }
-        
         self.sendButton.isEnabled = false
         self.receiveButton.isEnabled = false
+        
+        self.sendAlertView = UIAlertController(title: "Sending contact(s)", message: "Waiting for receiving device...", preferredStyle: .alert)
+        self.sendAlertView?.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+            self.sendButton.isEnabled = true
+            self.receiveButton.isEnabled = true
+            if self.peripheralManager.isAdvertising {
+                self.peripheralManager.stopAdvertising()
+            }
+        }))
+        present(self.sendAlertView!, animated: true, completion: {
+            let margin:CGFloat = 8.0
+            let rect = CGRect(x: margin, y: 72.0, width: self.sendAlertView!.view.frame.width - margin * 2.0, height: 2.0)
+            let progressView = UIProgressView(frame: rect)
+            progressView.progress = 0.0
+            progressView.tintColor = UIColor.blue
+            self.sendProgressView = progressView
+            self.sendAlertView?.view.addSubview(progressView)
+        })
+        
         if self.peripheralManager.state ==  .poweredOn && !self.peripheralManager.isAdvertising {
             self.peripheralManager.startAdvertising([CBAdvertisementDataServiceUUIDsKey : [CBUUID(string: TransferService.ContactsTransferServiceUUID)]])
         }
@@ -279,6 +294,8 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
                 return
         }
         
+//        self.sendAlertView.title = "Send to \(central)"
+        self.sendAlertView?.message = "Calculating..."
 //        let contactPacket = ContactPacket(id: contact.id, firstName: contact.firstName!, lastName: contact.lastName!, age: contact.age, email: contact.email!, gender: contact.gender)
         let contactPacket = ContactPacket(id: contact.id, firstName: contact.firstName, lastName: contact.lastName, age: contact.age?.int16Value, email: contact.email, gender: contact.gender?.boolValue)
         var contactPacketData = NSKeyedArchiver.archivedData(withRootObject: contactPacket)
@@ -317,6 +334,8 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
                 amountToSend = ContactListViewController.NotifyMTU
             }
             
+            self.sendProgressView?.progress = Float(self.sendContactIndex / dataToSend.count)
+            
             // Copy out the data we want
             let chunk = dataToSend.subdata(in: self.sendContactIndex..<self.sendContactIndex+amountToSend)
             
@@ -336,6 +355,7 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
                 self.sendButton.isEnabled = true
                 self.receiveButton.isEnabled = true
                 self.peripheralManager.stopAdvertising()
+                self.sendAlertView?.dismiss(animated: true, completion: nil)
                 return
             }
         }

@@ -40,6 +40,8 @@ class ContactDetailsViewController: UIViewController {
             if let record = NSManagedObject(entity: entityDescription!, insertInto: self.managedObjectContext) as? PersonEntity {
                 record.firstName = firstName!
                 record.lastName = lastName!
+                record.createdTime = NSDate()
+                record.modifiedTime = record.createdTime
                 
                 do {
                     // Save record
