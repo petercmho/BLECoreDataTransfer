@@ -280,7 +280,7 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         }
         
 //        let contactPacket = ContactPacket(id: contact.id, firstName: contact.firstName!, lastName: contact.lastName!, age: contact.age, email: contact.email!, gender: contact.gender)
-        let contactPacket = ContactPacket(id: contact.id, firstName: contact.firstName, lastName: contact.lastName, age: contact.age, email: contact.email, gender: contact.gender)
+        let contactPacket = ContactPacket(id: contact.id, firstName: contact.firstName, lastName: contact.lastName, age: contact.age?.int16Value, email: contact.email, gender: contact.gender?.boolValue)
         var contactPacketData = NSKeyedArchiver.archivedData(withRootObject: contactPacket)
         var contactPacketSize = contactPacketData.count + MemoryLayout<Int>.size
         self.contactToSend = Data(bytes: &contactPacketSize, count: MemoryLayout<Int>.size)

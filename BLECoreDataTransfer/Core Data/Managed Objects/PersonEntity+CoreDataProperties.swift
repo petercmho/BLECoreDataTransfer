@@ -16,10 +16,10 @@ extension PersonEntity {
         return NSFetchRequest<PersonEntity>(entityName: "PersonEntity")
     }
 
-    @NSManaged public var age: Int16
+    @NSManaged public var age: NSNumber?
     @NSManaged public var email: String?
     @NSManaged public var firstName: String?
-    @NSManaged public var gender: Bool
+    @NSManaged public var gender: NSNumber?
     @NSManaged public var id: Int32
     @NSManaged public var lastName: String?
 
