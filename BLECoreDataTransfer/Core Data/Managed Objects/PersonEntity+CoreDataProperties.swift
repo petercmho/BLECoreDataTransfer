@@ -2,7 +2,7 @@
 //  PersonEntity+CoreDataProperties.swift
 //  BLECoreDataTransfer
 //
-//  Created by Peter Ho on 2017-04-18.
+//  Created by Peter Ho on 2017-04-19.
 //  Copyright © 2017 Peter Ho. All rights reserved.
 //
 
@@ -22,5 +22,7 @@ extension PersonEntity {
     @NSManaged public var gender: NSNumber?
     @NSManaged public var id: Int32
     @NSManaged public var lastName: String?
+    @NSManaged public var createdTime: NSDate?
+    @NSManaged public var modifiedTime: NSDate?
 
 }
