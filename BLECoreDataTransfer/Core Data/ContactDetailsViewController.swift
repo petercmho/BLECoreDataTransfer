@@ -58,7 +58,6 @@ class ContactDetailsViewController: UIViewController {
                 // Show alert view
                 showAlertWithTitle(title: "Warning", message: "Contact needs a name", cancelButtonTitle: "OK")
             }
-            
         }
     }
     

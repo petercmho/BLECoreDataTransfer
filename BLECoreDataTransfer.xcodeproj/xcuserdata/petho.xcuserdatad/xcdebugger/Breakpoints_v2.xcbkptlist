@@ -303,7 +303,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "215"
             endingLineNumber = "215"
-            landmarkName = "controllerDidChangeContent(_:)"
+            landmarkName = "controllerWillChangeContent(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -367,7 +367,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "467"
             endingLineNumber = "467"
-            landmarkName = "peripheral(_:didUpdateValueFor:error:)"
+            landmarkName = "peripheral(_:didDiscoverCharacteristicsFor:error:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -383,7 +383,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "387"
             endingLineNumber = "387"
-            landmarkName = "centralManager(_:didConnect:)"
+            landmarkName = "cleanup()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
