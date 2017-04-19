@@ -335,6 +335,7 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             if self.sendContactIndex >= dataToSend.count {
                 self.sendButton.isEnabled = true
                 self.receiveButton.isEnabled = true
+                self.peripheralManager.stopAdvertising()
                 return
             }
         }
