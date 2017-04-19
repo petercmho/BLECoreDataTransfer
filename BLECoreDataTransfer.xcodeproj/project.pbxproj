@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5DB2BBA91EA71DD0000312FD /* PersonEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB2BBA71EA71DD0000312FD /* PersonEntity+CoreDataClass.swift */; };
+		5DB2BBAA1EA71DD0000312FD /* PersonEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB2BBA81EA71DD0000312FD /* PersonEntity+CoreDataProperties.swift */; };
 		A0170A951E9ECF0B00E50EB4 /* ContactPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0170A941E9ECF0B00E50EB4 /* ContactPacket.swift */; };
 		A02FCE381E5BB9090022E1C9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02FCE371E5BB9090022E1C9 /* AppDelegate.swift */; };
 		A02FCE3A1E5BB9090022E1C9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02FCE391E5BB9090022E1C9 /* ViewController.swift */; };
@@ -29,6 +31,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5DB2BBA71EA71DD0000312FD /* PersonEntity+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "PersonEntity+CoreDataClass.swift"; path = "Core Data/Managed Objects/PersonEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
+		5DB2BBA81EA71DD0000312FD /* PersonEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "PersonEntity+CoreDataProperties.swift"; path = "Core Data/Managed Objects/PersonEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A0170A941E9ECF0B00E50EB4 /* ContactPacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactPacket.swift; path = Transport/ContactPacket.swift; sourceTree = "<group>"; };
 		A02FCE341E5BB9090022E1C9 /* BLECoreDataTransfer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BLECoreDataTransfer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A02FCE371E5BB9090022E1C9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -136,6 +140,8 @@
 		A07722B71E94246000BDA803 /* Managed Objects */ = {
 			isa = PBXGroup;
 			children = (
+				5DB2BBA71EA71DD0000312FD /* PersonEntity+CoreDataClass.swift */,
+				5DB2BBA81EA71DD0000312FD /* PersonEntity+CoreDataProperties.swift */,
 			);
 			name = "Managed Objects";
 			sourceTree = "<group>";
@@ -235,6 +241,8 @@
 				A02FCE3A1E5BB9090022E1C9 /* ViewController.swift in Sources */,
 				A0170A951E9ECF0B00E50EB4 /* ContactPacket.swift in Sources */,
 				A02FCE381E5BB9090022E1C9 /* AppDelegate.swift in Sources */,
+				5DB2BBA91EA71DD0000312FD /* PersonEntity+CoreDataClass.swift in Sources */,
+				5DB2BBAA1EA71DD0000312FD /* PersonEntity+CoreDataProperties.swift in Sources */,
 				A02FCE581E5E13640022E1C9 /* Utils.swift in Sources */,
 				A02FCE4D1E5BBF9F0022E1C9 /* CentralViewController.swift in Sources */,
 				A073F1971E98014100BA0231 /* ContactTableViewCell.swift in Sources */,
