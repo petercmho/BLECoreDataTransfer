@@ -372,6 +372,9 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
                     self.contactToSend?.append(nextContactPacketData)
                     
                     if self.contactToSend == nil {
+                        self.sendButton.isEnabled = true
+                        self.receiveButton.isEnabled = true
+                        self.peripheralManager.stopAdvertising()
                         return
                     }
                     
@@ -558,9 +561,29 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         if count == self.contactToReceive!.count {
             // Reconstruct contact from data
             let contactPacketData = self.contactToReceive!.subdata(in: MemoryLayout<Int>.size..<self.contactToReceive!.count)
-            let contactPacket = NSKeyedUnarchiver.unarchiveObject(with: contactPacketData) as? ContactPacket
             
-            print("contactPacket is \(String(describing: contactPacket?.firstName)) \(String(describing: contactPacket?.lastName))")
+            // Insert received contact
+            if let contactPacket = NSKeyedUnarchiver.unarchiveObject(with: contactPacketData) as? ContactPacket,
+                let entityDescription = NSEntityDescription.entity(forEntityName: "PersonEntity", in: self.managedObjectContext),
+                let person = NSManagedObject(entity: entityDescription, insertInto: self.managedObjectContext) as? PersonEntity {
+                print("contactPacket is \(String(describing: contactPacket.firstName)) \(String(describing: contactPacket.lastName))")
+                person.id = contactPacket.id
+                person.firstName = contactPacket.firstName
+                person.lastName = contactPacket.lastName
+                person.age = contactPacket.age as NSNumber?
+                person.email = contactPacket.email
+                person.gender = contactPacket.gender as NSNumber?
+                person.createdTime = contactPacket.createdTime
+                person.modifiedTime = contactPacket.modifiedTime
+                
+                do {
+                    try person.managedObjectContext?.save()
+                } catch {
+                    let saveError = error as NSError
+                    print("\(saveError), \(saveError.userInfo)")
+                }
+            }
+            
             self.receiveContactIndex += 1
             if self.receiveContactIndex < totalContacts {
                 self.contactToReceive = Data()
