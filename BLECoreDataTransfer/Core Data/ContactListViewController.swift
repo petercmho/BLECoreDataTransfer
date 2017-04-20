@@ -55,8 +55,10 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     
     private var contactToSend: Data?
     private var contactToReceive: Data?
-    private var sendContactIndex: Int = 0
+    private var sendContactBufferPos: Int = 0
     private var receiveContactIndex: Int = 0
+    private var sendTotalContacts: Int = 0
+    private var sendContactIndex: Int = 0
     private var sendAlertView: UIAlertController?
     private var sendProgressView: UIProgressView?
     private var receiveAlertView: UIAlertController?
@@ -289,20 +291,27 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
         print("\(Utils.getCurrentTime()) - peripheralManager(_ \(peripheral) :central \(central) :didSubscribeTo: \(characteristic)) - Central subscribed to characteristic")
         
-        guard let contact = fetchedResultsController.object(at: IndexPath(row: 0, section: 0)) as? PersonEntity
+        self.sendContactIndex = 0
+
+        guard let totalContacts = fetchedResultsController.sections?[0].numberOfObjects,
+            totalContacts > self.sendContactIndex,
+            let contact = fetchedResultsController.object(at: IndexPath(row: self.sendContactIndex, section: 0)) as? PersonEntity
         else {
-                return
+            return
         }
         
+        self.sendTotalContacts = totalContacts
 //        self.sendAlertView.title = "Send to \(central)"
         self.sendAlertView?.message = "Calculating..."
-//        let contactPacket = ContactPacket(id: contact.id, firstName: contact.firstName!, lastName: contact.lastName!, age: contact.age, email: contact.email!, gender: contact.gender)
         let contactPacket = ContactPacket(id: contact.id, firstName: contact.firstName, lastName: contact.lastName, age: contact.age?.int16Value, email: contact.email, gender: contact.gender?.boolValue)
+        
+        self.contactToSend = Data(bytes: &self.sendTotalContacts, count: MemoryLayout<Int>.size)
+        
         var contactPacketData = NSKeyedArchiver.archivedData(withRootObject: contactPacket)
         var contactPacketSize = contactPacketData.count + MemoryLayout<Int>.size
-        self.contactToSend = Data(bytes: &contactPacketSize, count: MemoryLayout<Int>.size)
+        self.contactToSend!.append(Data(bytes: &contactPacketSize, count: MemoryLayout<Int>.size))
         self.contactToSend!.append(contactPacketData)
-        self.sendContactIndex = 0
+        self.sendContactBufferPos = 0
         
         if let deserializedContact = NSKeyedUnarchiver.unarchiveObject(with: contactPacketData) as? ContactPacket {
             print("\(String(describing: deserializedContact.firstName)) \(String(describing: deserializedContact.lastName))")
@@ -318,26 +327,26 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     }
     
     func sendContact() {
-        guard let dataToSend = self.contactToSend
+        guard var dataToSend = self.contactToSend
             else { return }
         
-        if self.sendContactIndex >= dataToSend.count {
+        if self.sendContactBufferPos >= dataToSend.count {
             return
         }
         
         var didSend = true
         
         while didSend {
-            var amountToSend = dataToSend.count - self.sendContactIndex
+            var amountToSend = dataToSend.count - self.sendContactBufferPos
             
             if amountToSend > ContactListViewController.NotifyMTU {
                 amountToSend = ContactListViewController.NotifyMTU
             }
             
-            self.sendProgressView?.progress = Float(self.sendContactIndex / dataToSend.count)
+            self.sendProgressView?.progress = Float(self.sendContactBufferPos / dataToSend.count)
             
             // Copy out the data we want
-            let chunk = dataToSend.subdata(in: self.sendContactIndex..<self.sendContactIndex+amountToSend)
+            let chunk = dataToSend.subdata(in: self.sendContactBufferPos..<self.sendContactBufferPos+amountToSend)
             
             // Send it
             didSend = peripheralManager.updateValue(chunk, for: self.contactTransferCharacteristic, onSubscribedCentrals: nil)
@@ -348,15 +357,32 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             print("\(Utils.getCurrentTime()) - Sent: \(chunk)")
             
             // It did send, so update our index
-            self.sendContactIndex += amountToSend
+            self.sendContactBufferPos += amountToSend
             
             // Was it the last one?
-            if self.sendContactIndex >= dataToSend.count {
-                self.sendButton.isEnabled = true
-                self.receiveButton.isEnabled = true
-                self.peripheralManager.stopAdvertising()
-                self.sendAlertView?.dismiss(animated: true, completion: nil)
-                return
+            if self.sendContactBufferPos >= dataToSend.count {
+                self.sendContactIndex += 1
+                if self.sendContactIndex < self.sendTotalContacts,
+                    let nextContact = self.fetchedResultsController.object(at: IndexPath(row: self.sendContactIndex, section: 0)) as? PersonEntity {
+                    let nextContactPacket = ContactPacket(id: nextContact.id, firstName: nextContact.firstName, lastName: nextContact.lastName, age: nextContact.age?.int16Value, email: nextContact.email, gender: nextContact.gender?.boolValue)
+                    let nextContactPacketData = NSKeyedArchiver.archivedData(withRootObject: nextContactPacket)
+                    var nextContactPacketDataSize = nextContactPacketData.count + MemoryLayout<Int>.size
+                    self.contactToSend = Data(bytes: &nextContactPacketDataSize, count: MemoryLayout<Int>.size)
+                    self.contactToSend?.append(nextContactPacketData)
+                    
+                    if self.contactToSend == nil {
+                        return
+                    }
+                    
+                    dataToSend = self.contactToSend!
+                    self.sendContactBufferPos = 0
+                } else {
+                    self.sendButton.isEnabled = true
+                    self.receiveButton.isEnabled = true
+                    self.peripheralManager.stopAdvertising()
+                    self.sendAlertView?.dismiss(animated: true, completion: nil)
+                    return
+                }
             }
         }
     }
