@@ -63,6 +63,7 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
     private var sendProgressView: UIProgressView?
     private var receiveAlertView: UIAlertController?
     private var receiveProgressView: UIProgressView?
+    private var receiveTotalContacts: Int?
     
     private lazy var contactTransferCharacteristic: CBMutableCharacteristic = {
         return CBMutableCharacteristic(type: CBUUID(string: TransferService.ContactsTransferCharacteristicUUID), properties: .notify, value: nil, permissions: .readable)
@@ -509,6 +510,7 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             if characteristic.uuid.isEqual(CBUUID(string: TransferService.ContactsTransferCharacteristicUUID)) {
                 // If it is, subscribe to it
                 print("   peripheral.setNotifyValue(true, for: \(characteristic)")
+                self.receiveTotalContacts = nil
                 peripheral.setNotifyValue(true, for: characteristic)
             }
         }
@@ -532,29 +534,44 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         }
         
         if let cValue = characteristic.value {
-            self.contactToReceive!.append(cValue)
+            if self.receiveTotalContacts == nil {
+                self.receiveTotalContacts = cValue.withUnsafeBytes { (ptr: UnsafePointer<Int>) -> Int in
+                    return ptr.pointee
+                }
+                self.contactToReceive!.append(cValue.subdata(in: MemoryLayout<Int>.size..<cValue.count))
+            } else {
+                self.contactToReceive!.append(cValue)
+            }
         }
         
         let count = self.contactToReceive!.withUnsafeBytes { (ptr: UnsafePointer<Int>) -> Int in
             return ptr.pointee
         }
         
-        self.receiveAlertView?.message = "Receiving"
-        self.receiveProgressView?.progress = Float(self.contactToReceive!.count / count)
+        guard let totalContacts = self.receiveTotalContacts,
+            let progressView = self.receiveProgressView
+            else { return }
         
-        if count == self.contactToReceive!.count {            
-            self.receiveAlertView?.dismiss(animated: true, completion: {
-                self.sendButton.isEnabled = true
-                self.receiveButton.isEnabled = true
-            })
-            
+        self.receiveAlertView?.message = "Receiving"
+        progressView.progress = Float(self.receiveContactIndex / totalContacts)
+        
+        if count == self.contactToReceive!.count {
             // Reconstruct contact from data
             let contactPacketData = self.contactToReceive!.subdata(in: MemoryLayout<Int>.size..<self.contactToReceive!.count)
             let contactPacket = NSKeyedUnarchiver.unarchiveObject(with: contactPacketData) as? ContactPacket
             
-            print("contactPacket is \(String(describing: contactPacket))")
-            self.discoveredPeripheral = nil
-            peripheral.setNotifyValue(false, for: characteristic)
+            print("contactPacket is \(String(describing: contactPacket?.firstName)) \(String(describing: contactPacket?.lastName))")
+            self.receiveContactIndex += 1
+            if self.receiveContactIndex < totalContacts {
+                self.contactToReceive = Data()
+            } else {
+                self.receiveAlertView?.dismiss(animated: true, completion: {
+                    self.sendButton.isEnabled = true
+                    self.receiveButton.isEnabled = true
+                })
+                self.discoveredPeripheral = nil
+                peripheral.setNotifyValue(false, for: characteristic)
+            }
         }
     }
     
