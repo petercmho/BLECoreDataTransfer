@@ -564,23 +564,44 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             
             // Insert received contact
             if let contactPacket = NSKeyedUnarchiver.unarchiveObject(with: contactPacketData) as? ContactPacket,
-                let entityDescription = NSEntityDescription.entity(forEntityName: "PersonEntity", in: self.managedObjectContext),
-                let person = NSManagedObject(entity: entityDescription, insertInto: self.managedObjectContext) as? PersonEntity {
+                let fetchedObjects = self.fetchedResultsController.fetchedObjects as? [PersonEntity] {
+                if let index = fetchedObjects.index(where: { (person) -> Bool in
+                    return person.id == contactPacket.id
+                })
+                {
+                    let existedPerson = fetchedObjects[index]
+                    existedPerson.firstName = contactPacket.firstName
+                    existedPerson.lastName = contactPacket.lastName
+                    existedPerson.createdTime = contactPacket.createdTime
+                    existedPerson.modifiedTime = contactPacket.modifiedTime
+                    existedPerson.age = contactPacket.age as NSNumber?
+                    existedPerson.email = contactPacket.email
+                    existedPerson.gender = contactPacket.gender as NSNumber?
+                    do {
+                        try self.managedObjectContext.save()
+                        try self.fetchedResultsController.performFetch()
+                    } catch {
+                        let saveError = error as NSError
+                        print("\(saveError), \(saveError.userInfo)")
+                    }
+                } else if let entityDescription = NSEntityDescription.entity(forEntityName: "PersonEntity", in: self.managedObjectContext),
+                    let person = NSManagedObject(entity: entityDescription, insertInto: self.managedObjectContext) as? PersonEntity {
                 print("contactPacket is \(String(describing: contactPacket.firstName)) \(String(describing: contactPacket.lastName))")
-                person.id = contactPacket.id
-                person.firstName = contactPacket.firstName
-                person.lastName = contactPacket.lastName
-                person.age = contactPacket.age as NSNumber?
-                person.email = contactPacket.email
-                person.gender = contactPacket.gender as NSNumber?
-                person.createdTime = contactPacket.createdTime
-                person.modifiedTime = contactPacket.modifiedTime
-                
-                do {
-                    try person.managedObjectContext?.save()
-                } catch {
-                    let saveError = error as NSError
-                    print("\(saveError), \(saveError.userInfo)")
+                    person.id = contactPacket.id
+                    person.firstName = contactPacket.firstName
+                    person.lastName = contactPacket.lastName
+                    person.age = contactPacket.age as NSNumber?
+                    person.email = contactPacket.email
+                    person.gender = contactPacket.gender as NSNumber?
+                    person.createdTime = contactPacket.createdTime
+                    person.modifiedTime = contactPacket.modifiedTime
+                    
+                    do {
+                        try person.managedObjectContext?.save()
+                    } catch {
+                        let saveError = error as NSError
+                        print("\(saveError), \(saveError.userInfo)")
+                    }
                 }
             }
             
