@@ -15,11 +15,13 @@ class ContactDetailsViewController: UIViewController {
     @IBOutlet weak var lastNameTextField: UITextField!
     
     var managedObjectContext: NSManagedObjectContext!
+    var personEntities: [PersonEntity]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        let id = getNextId()
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,6 +40,7 @@ class ContactDetailsViewController: UIViewController {
             
             // Initialize record
             if let record = NSManagedObject(entity: entityDescription!, insertInto: self.managedObjectContext) as? PersonEntity {
+                record.id = Int32(getNextId())
                 record.firstName = firstName!
                 record.lastName = lastName!
                 record.createdTime = NSDate()
@@ -64,6 +67,37 @@ class ContactDetailsViewController: UIViewController {
     }
     
     // MARK: - Helper methods
+    private func getNextId() -> Int {
+        guard let persons = personEntities
+            else { return 1 }
+        
+        var ids = [Int]()
+        for person in persons {
+            if let index = ids.index(where: { (p) -> Bool in
+                return p > Int(person.id)
+            }) {
+                ids.insert(Int(person.id), at: index)
+            } else {
+                ids.append(Int(person.id))
+            }
+        }
+        
+        var low = 1
+        var high = ids.count
+        var mid = (low + high) / 2
+        
+        while mid >= low && mid <= high {
+            if ids[mid - 1] == mid {
+                low = mid + 1
+            } else {
+                high = mid - 1
+            }
+            mid = (low + high) / 2
+        }
+        
+        return low
+    }
+    
     private func showAlertWithTitle(title: String, message: String, cancelButtonTitle: String) {
         // Initialize Alert Controller
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
