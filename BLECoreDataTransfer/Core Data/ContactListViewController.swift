@@ -166,6 +166,12 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         return cell
     }
     
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            
+        }
+    }
+    
     // MARK: - Actions
     
     @IBAction func addNewContact(_ sender: Any) {
