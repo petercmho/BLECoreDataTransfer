@@ -667,6 +667,7 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         if segue.identifier == "showContactDetailsIdentifier" {
             if let destination = segue.destination as? ContactDetailsViewController {
                 destination.managedObjectContext = self.managedObjectContext
+                destination.personEntities = self.fetchedResultsController.fetchedObjects as? [PersonEntity]
             }
         }
     }
