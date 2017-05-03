@@ -22,6 +22,7 @@
 		A02FCE541E5CD7DC0022E1C9 /* PeripheralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02FCE531E5CD7DC0022E1C9 /* PeripheralViewController.swift */; };
 		A02FCE561E5D15E00022E1C9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A02FCE551E5D15E00022E1C9 /* Foundation.framework */; };
 		A02FCE581E5E13640022E1C9 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02FCE571E5E13640022E1C9 /* Utils.swift */; };
+		A073694A1EBA3F2E00172A75 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07369491EBA3F2E00172A75 /* CloudKit.framework */; };
 		A073F1971E98014100BA0231 /* ContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A073F1961E98014100BA0231 /* ContactTableViewCell.swift */; };
 		A073F1991E9812FB00BA0231 /* ContactDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A073F1981E9812FB00BA0231 /* ContactDetailsViewController.swift */; };
 		A07722B21E93130500BDA803 /* ContactListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07722B11E93130500BDA803 /* ContactListViewController.swift */; };
@@ -48,6 +49,8 @@
 		A02FCE531E5CD7DC0022E1C9 /* PeripheralViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PeripheralViewController.swift; path = ../PeripheralViewController.swift; sourceTree = "<group>"; };
 		A02FCE551E5D15E00022E1C9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A02FCE571E5E13640022E1C9 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		A07369481EBA3F2900172A75 /* BLECoreDataTransfer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BLECoreDataTransfer.entitlements; sourceTree = "<group>"; };
+		A07369491EBA3F2E00172A75 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		A073F1961E98014100BA0231 /* ContactTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactTableViewCell.swift; path = "Core Data/ContactTableViewCell.swift"; sourceTree = "<group>"; };
 		A073F1981E9812FB00BA0231 /* ContactDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactDetailsViewController.swift; path = "Core Data/ContactDetailsViewController.swift"; sourceTree = "<group>"; };
 		A07722B11E93130500BDA803 /* ContactListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactListViewController.swift; path = "Core Data/ContactListViewController.swift"; sourceTree = "<group>"; };
@@ -62,6 +65,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A07722BD1E9425F800BDA803 /* CoreData.framework in Frameworks */,
+				A073694A1EBA3F2E00172A75 /* CloudKit.framework in Frameworks */,
 				A02FCE561E5D15E00022E1C9 /* Foundation.framework in Frameworks */,
 				A02FCE501E5BC1300022E1C9 /* CoreBluetooth.framework in Frameworks */,
 			);
@@ -99,6 +103,7 @@
 		A02FCE361E5BB9090022E1C9 /* BLECoreDataTransfer */ = {
 			isa = PBXGroup;
 			children = (
+				A07369481EBA3F2900172A75 /* BLECoreDataTransfer.entitlements */,
 				A0170A931E9ECE9300E50EB4 /* Transport */,
 				A07722B01E93127100BDA803 /* Core Data */,
 				A02FCE371E5BB9090022E1C9 /* AppDelegate.swift */,
@@ -119,6 +124,7 @@
 		A02FCE4E1E5BC1300022E1C9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A07369491EBA3F2E00172A75 /* CloudKit.framework */,
 				A07722BC1E9425F800BDA803 /* CoreData.framework */,
 				A02FCE551E5D15E00022E1C9 /* Foundation.framework */,
 				A02FCE4F1E5BC1300022E1C9 /* CoreBluetooth.framework */,
@@ -191,6 +197,12 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+							com.apple.iCloud = {
 								enabled = 1;
 							};
 						};
@@ -368,6 +380,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BLECoreDataTransfer/BLECoreDataTransfer.entitlements;
 				DEVELOPMENT_TEAM = 853Y92H4N6;
 				INFOPLIST_FILE = BLECoreDataTransfer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -382,6 +395,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BLECoreDataTransfer/BLECoreDataTransfer.entitlements;
 				DEVELOPMENT_TEAM = 853Y92H4N6;
 				INFOPLIST_FILE = BLECoreDataTransfer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
