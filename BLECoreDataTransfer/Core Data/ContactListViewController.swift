@@ -144,8 +144,19 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             })
         }
         CKContainer.default().privateCloudDatabase.add(zoneOperation)
-        
+
         let zoneId = CKRecordZoneID(zoneName: "TestZone1", ownerName: CKCurrentUserDefaultName)
+/*        // Delete custom zone
+        let deleteZoneOperation = CKModifyRecordZonesOperation(recordZonesToSave: [], recordZoneIDsToDelete: [zoneId])
+        deleteZoneOperation.modifyRecordZonesCompletionBlock = { (recordZones: [CKRecordZone]?, zoneIDs: [CKRecordZoneID]?, error: Error?) -> Void in
+            if let deleteZoneError = error as? CKError {
+                print("Delete custome zone error is \(deleteZoneError.localizedDescription)")
+                return
+            }
+            print("Successfully delete custom zone")
+        }
+        CKContainer.default().privateCloudDatabase.add(deleteZoneOperation)
+*/
         let contactId = CKRecordID(recordName: "Iris Yu", zoneID: zoneId)
 //        let contact = CKRecord(recordType: "Contact", zoneID: zoneId)
         let contact = CKRecord(recordType: "Contact", recordID: contactId)
@@ -170,6 +181,11 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
                         
                         print("Successfully modify contact")
                     })
+                } else if saveError.code == CKError.Code.zoneNotFound {
+                    print("Zone not found")
+                } else if saveError.code == CKError.Code.zoneBusy {
+                    print("Zone is busy")
+                    // Retry
                 }
                 
                 return
