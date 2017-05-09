@@ -10,6 +10,7 @@
 import UIKit
 import CoreData
 import CoreBluetooth
+import CloudKit
 
 class ContactListViewController: UIViewController, NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate, CBPeripheralManagerDelegate, CBCentralManagerDelegate, CBPeripheralDelegate {
     
@@ -117,8 +118,99 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         }
         
         // Do any additional setup after loading the view.
-//        self.peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
-//        self.centralManager = CBCentralManager(delegate: self, queue: nil)
+        let customZone = CKRecordZone(zoneName: "TestZone1")
+        let zoneOperation = CKModifyRecordZonesOperation(recordZonesToSave: [customZone], recordZoneIDsToDelete: [])
+        zoneOperation.modifyRecordZonesCompletionBlock = { (recordZones: [CKRecordZone]?, zoneIDs: [CKRecordZoneID]?, error: Error?) -> Void in
+            if let zoneError = error as? CKError {
+                print("Zone Record error is \(zoneError.localizedDescription)")
+                
+                return
+            }
+            //let contact = CKRecord(recordType: "Contact")
+            guard let count = zoneIDs?.count, count > 0, let zoneId = zoneIDs?[0] else { return }
+            let contact = CKRecord(recordType: "Contact", zoneID: zoneId)
+            
+            contact["FirstName"] = "Peter" as NSString
+            contact["LastName"] = "Ho" as NSString
+            
+            let container = CKContainer.default()
+            let privateDatabase = container.privateCloudDatabase
+            privateDatabase.save(contact, completionHandler: { (record: CKRecord?, error: Error?) -> Void in
+                if let saveError = error {
+                    print("Record save error is \(saveError.localizedDescription)")
+                }
+                
+                print("Save contact succussfully")
+            })
+        }
+        CKContainer.default().privateCloudDatabase.add(zoneOperation)
+        
+        let zoneId = CKRecordZoneID(zoneName: "TestZone1", ownerName: CKCurrentUserDefaultName)
+        let contactId = CKRecordID(recordName: "Iris Yu", zoneID: zoneId)
+//        let contact = CKRecord(recordType: "Contact", zoneID: zoneId)
+        let contact = CKRecord(recordType: "Contact", recordID: contactId)
+        contact["FirstName"] = "Iris" as NSString
+        contact["LastName"] = "Yu" as NSString
+        contact["Modified"] = Date() as NSDate
+        
+        CKContainer.default().privateCloudDatabase.save(contact, completionHandler: { (record, error) -> Void in
+            if let saveError = error as? CKError {
+                print("Custom Zone Record save error is \(saveError.localizedDescription)")
+                if saveError.errorCode == 14 {
+                    guard let serverRecord = saveError.serverRecord else { return }
+                    
+                    serverRecord["Modified"] = Date() as NSDate
+                    
+                    CKContainer.default().privateCloudDatabase.save(serverRecord, completionHandler: { (record, error) -> Void in
+                        if let modifiedError = error as? CKError {
+                            print("Modified Zone Record error is \(modifiedError.localizedDescription)")
+                            
+                            return
+                        }
+                        
+                        print("Successfully modify contact")
+                    })
+                }
+                
+                return
+            }
+            
+            print("Save custom zone contact successfully")
+        })
+        
+        
+        let subscription = CKDatabaseSubscription(subscriptionID: "shared-contacts")
+        subscription.recordType = "Contact"
+        let notificationInfo = CKNotificationInfo()
+        notificationInfo.shouldSendContentAvailable = true
+        subscription.notificationInfo = notificationInfo
+        
+//        let operation = CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: [])
+//        operation.modifySubscriptionsCompletionBlock = { (subscriptions: [CKSubscription]?, names: [String]?, error: Error?) -> Void in
+//            // labor-of-love error handling when error != nil
+//            if let subscriptionError = error {
+//                print("Subscription error is \(subscriptionError.localizedDescription)")
+//            }
+//            guard let subscriptions = subscriptions, let names = names else {
+//                return
+//            }
+//            for name in names {
+//                print("Successfully subscribe \(name)")
+//            }
+//        }
+//        operation.qualityOfService = .utility
+//        CKContainer.default().privateCloudDatabase.add(operation)
+        
+//        let operation = CKRecordZoneSubscription(zoneID: zoneId)
+        CKContainer.default().privateCloudDatabase.save(subscription, completionHandler: { (subscription, error) -> Void in
+            if let subscriptionError = error as? CKError {
+                print("Subscription error is \(subscriptionError.localizedDescription)")
+                
+                return
+            }
+            
+            print("Successfully subscribe \(String(describing: subscription?.subscriptionID))")
+        })
     }
     
     override func viewWillDisappear(_ animated: Bool) {
