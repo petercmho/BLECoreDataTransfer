@@ -108,6 +108,40 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         }
     }
     
+    let defaults = UserDefaults.standard
+    let container = CKContainer.default()
+    let privateDB = CKContainer.default().privateCloudDatabase
+    let sharedDB = CKContainer.default().sharedCloudDatabase
+    
+    let zoneId = CKRecordZoneID(zoneName: "ContactZone", ownerName: CKCurrentUserDefaultName)
+    
+    var createdCustomZone : Bool {
+        get {
+            return defaults.bool(forKey: "createCustomZoneKey")
+        }
+        set(value) {
+            defaults.set(value, forKey: "createCustomZoneKey")
+        }
+    }
+    
+    var subscribedToPrivateChanges : Bool {
+        get {
+            return defaults.bool(forKey: "subscribedToPrivateChangesKey")
+        }
+        set(value) {
+            defaults.set(value, forKey: "subscribedToPrivateChangesKey")
+        }
+    }
+    
+    var subscribedToSharedChanges : Bool {
+        get {
+            return defaults.bool(forKey: "subscribedToSharedChangesKey")
+        }
+        set(value) {
+            defaults.set(value, forKey: "subscribedToSharedChangesKey")
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         do {
@@ -217,7 +251,24 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
 //        operation.qualityOfService = .utility
 //        CKContainer.default().privateCloudDatabase.add(operation)
         
-//        let operation = CKRecordZoneSubscription(zoneID: zoneId)
+        // Record Zone Subscription
+        let recordZoneSubscription = CKRecordZoneSubscription(zoneID: zoneId, subscriptionID: "shared-record-zone")
+        let recordZoneNotificationInfo = CKNotificationInfo()
+        recordZoneNotificationInfo.shouldSendContentAvailable = true
+        recordZoneSubscription.notificationInfo = recordZoneNotificationInfo
+        
+        let modifySubscriptionsOperation = CKModifySubscriptionsOperation(subscriptionsToSave: [recordZoneSubscription], subscriptionIDsToDelete: [])
+        modifySubscriptionsOperation.modifySubscriptionsCompletionBlock = { (subscriptions: [CKSubscription]?, names: [String]?, error: Error?) -> Void in
+            if let subscriptionError = error as? CKError {
+                print("Record Zone Subscription error is \(subscriptionError.localizedDescription)")
+                return
+            }
+            
+            print("Successfully save record zone subscription")
+        }
+        modifySubscriptionsOperation.qualityOfService = .utility
+        CKContainer.default().privateCloudDatabase.add(modifySubscriptionsOperation)
+        
         CKContainer.default().privateCloudDatabase.save(subscription, completionHandler: { (subscription, error) -> Void in
             if let subscriptionError = error as? CKError {
                 print("Subscription error is \(subscriptionError.localizedDescription)")
@@ -227,6 +278,13 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             
             print("Successfully subscribe \(String(describing: subscription?.subscriptionID))")
         })
+        
+        print("createdCustomZone is \(createdCustomZone)")
+        
+        let createZoneGroup = DispatchGroup()
+        
+        createContactZone(group: createZoneGroup)
+        subscribeChangeNotification(group: createZoneGroup)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -780,5 +838,172 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         }
     }
     
-
+    // MAKR: - CloudKit
+    func createContactZone(group: DispatchGroup) {
+        if !self.createdCustomZone {
+            group.enter()
+            
+            let customZone = CKRecordZone(zoneID: zoneId)
+            let createZoneOperation = CKModifyRecordZonesOperation(recordZonesToSave: [customZone], recordZoneIDsToDelete: [])
+            createZoneOperation.modifyRecordZonesCompletionBlock = { (saved, deleted, error) in
+                if error == nil { self.createdCustomZone = true }
+                else if let recordZoneError = error as? CKError {
+                    print("Modify record zone operation error is \(recordZoneError.localizedDescription)")
+                }
+                group.leave()
+            }
+            createZoneOperation.qualityOfService = .userInitiated
+            self.privateDB.add(createZoneOperation)
+        }
+    }
+    
+    func createDatabaseSubscriptionOperation(subscriptionId: String) -> CKModifySubscriptionsOperation {
+        let subscription = CKDatabaseSubscription(subscriptionID: subscriptionId)
+        let notificationInfo = CKNotificationInfo()
+        // send a silent notification
+        notificationInfo.shouldSendContentAvailable = true
+        subscription.notificationInfo = notificationInfo
+        
+        let operation = CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: [])
+        operation.modifySubscriptionsCompletionBlock = { (subscriptions, names, error) in
+            if let subscriptionError = error as? CKError {
+                print("Modify subscription error is \(subscriptionError.localizedDescription)")
+            }
+        }
+        operation.qualityOfService = .utility
+        return operation
+    }
+    
+    func subscribeChangeNotification(group: DispatchGroup) {
+        if !self.subscribedToPrivateChanges {
+            let createSubscriptionOperation = self.createDatabaseSubscriptionOperation(subscriptionId: "private-changes")
+            createSubscriptionOperation.modifySubscriptionsCompletionBlock = { (subscriptions, deletedIds, error) in
+                if let subscriptionError = error as? CKError {
+                    print("Modify private-changes subscription error is \(subscriptionError.localizedDescription)")
+                    return
+                }
+                self.subscribedToPrivateChanges = true
+            }
+            self.privateDB.add(createSubscriptionOperation)
+        }
+        
+        if !self.subscribedToSharedChanges {
+            let createSubscriptionOperation = self.createDatabaseSubscriptionOperation(subscriptionId: "shared-changes")
+            createSubscriptionOperation.modifySubscriptionsCompletionBlock = { (subscriptions, deletedIds, error) in
+                if let subscriptionError = error as? CKError {
+                    print("Modify private-changes subscription error is \(subscriptionError.localizedDescription)")
+                    return
+                }
+                self.subscribedToSharedChanges = true
+            }
+            self.sharedDB.add(createSubscriptionOperation)
+        }
+        
+        // Fetch any changes from the server that happened while the app wasn't running
+        group.notify(queue: DispatchQueue.global()) {
+            if self.createdCustomZone {
+                self.fetchChanges(in: .private) {}
+                self.fetchChanges(in: .shared) {}
+            }
+        }
+    }
+    
+    // MARK: Fetching changes
+    
+    func fetchChanges(in databaseScope: CKDatabaseScope, completion: @escaping () -> Void) {
+        switch databaseScope {
+        case .private:
+            fetchDatabaseChanges(database: self.privateDB, databaseTokenKey: "private", completion: completion)
+        case .shared:
+            fetchDatabaseChanges(database: self.sharedDB, databaseTokenKey: "shared", completion: completion)
+        case .public:
+            fatalError()
+        }
+    }
+    
+    func fetchDatabaseChanges(database: CKDatabase, databaseTokenKey: String, completion: @escaping () -> Void) {
+        var changedZoneIDs: [CKRecordZoneID] = []
+        let changeToken: CKServerChangeToken? = nil
+        let operation = CKFetchDatabaseChangesOperation(previousServerChangeToken: changeToken)
+        
+        operation.recordZoneWithIDChangedBlock = { (zoneID) in
+            changedZoneIDs.append(zoneID)
+        }
+        
+        operation.recordZoneWithIDWasDeletedBlock = { (zoneID) in
+            // Write this zone deletion to memory
+        }
+        
+        operation.changeTokenUpdatedBlock = { (token) in
+            // Flush zone deletions for this database to disk
+            // Write this new database change token to memory
+        }
+        
+        operation.fetchDatabaseChangesCompletionBlock = { (token, moreComing, error) in
+            if let error = error as? CKError {
+                print("Error during fetch shared database changes operation", error)
+                completion()
+                return
+            }
+            
+            // Flush zone deletions for this database to disk
+            // Write this new database change token to memory
+            
+            self.fetchZoneChanges(database: database, databaseTokenKey: databaseTokenKey, zoneIDs: changedZoneIDs) {
+                // Flush in-memory database change token to disk
+                completion()
+            }
+        }
+        
+        operation.qualityOfService = .userInitiated
+        
+        database.add(operation)
+    }
+    
+    func fetchZoneChanges(database: CKDatabase, databaseTokenKey: String, zoneIDs: [CKRecordZoneID], completion: @escaping () -> Void) {
+        // Look up the previous change token for each zone
+        var optionsByRecordZoneID = [CKRecordZoneID: CKFetchRecordZoneChangesOptions]()
+        for zoneID in zoneIDs {
+            let options = CKFetchRecordZoneChangesOptions()
+            options.previousServerChangeToken = nil         // Read change token from disk
+            optionsByRecordZoneID[zoneID] = options
+        }
+        let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, optionsByRecordZoneID: optionsByRecordZoneID)
+        
+        operation.recordChangedBlock = { (record) in
+            print("Record changed:", record)
+            // Write this record change to memory
+        }
+        
+        operation.recordWithIDWasDeletedBlock = { (recordId) in
+            print("Record deleted:", recordId)
+            // Write this record deletion to memory
+        }
+        
+        operation.recordZoneChangeTokensUpdatedBlock = { (zoneId, token, data) in
+            // Flush record changes and deletions for this zone to disk
+            // Write this new zone change token to disk
+        }
+        
+        operation.recordZoneFetchCompletionBlock = { (zoneId, changeToken, _, _, error) in
+            if let recordZoneFetchError = error as? CKError {
+                print("Error fetching zone changes for \(databaseTokenKey) database:", recordZoneFetchError)
+                return
+            }
+            
+            // Flush record changes and deletions for this zone to disk
+            // Write this new zone change token to disk
+        }
+        
+        operation.fetchRecordZoneChangesCompletionBlock = { (error) in
+            if let zoneChangesError = error as? CKError {
+                print("Error fetching zone changes for \(databaseTokenKey) database:", zoneChangesError)
+            }
+            
+            completion()
+        }
+        
+        database.add(operation)
+    }
+    
 }

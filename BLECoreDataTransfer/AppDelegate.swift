@@ -15,8 +15,7 @@ import CloudKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         // Register for push notifications
@@ -24,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        let notificationSettings = UNNotificationSettings()
 //        application.registerUserNotificationSettings(<#T##notificationSettings: UIUserNotificationSettings##UIUserNotificationSettings#>)
         application.registerForRemoteNotifications()
+        
         return true
     }
 
@@ -54,15 +54,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-//        <#code#>
+        print("AppDelegate.application(_:didRegisterForRemoteNotificationsWithDeviceToken:)")
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("AppDelegate.application(_:didFailToRegisterForRemoteNotificationsWithError: \(error.localizedDescription)")
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         let dict = userInfo as! [String: NSObject]
-        let notification = CKNotification(fromRemoteNotificationDictionary: dict)
+        guard let notification:CKDatabaseNotification = CKNotification(fromRemoteNotificationDictionary: dict) as? CKDatabaseNotification else
+        {
+            return
+        }
         
         if notification.subscriptionID == "shared-contacts" {
-            
+            print("Receive shared-contacts notification and notification type is \(notification.notificationType)")
+        } else if notification.subscriptionID == "shared-record-zone" {
+            print("Receive shared-record-zone notification and notification type is \(notification.notificationType)")
+        } else if notification.subscriptionID == "private-changes" ||
+            notification.subscriptionID == "shared-changes" {
+            guard let viewController = application.keyWindow?.rootViewController?.navigationController?.topViewController as? ContactListViewController else { return }
+            viewController.fetchChanges(in: notification.databaseScope) {
+                completionHandler(.newData)
+            }
         }
     }
 
