@@ -838,7 +838,7 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         }
     }
     
-    // MAKR: - CloudKit
+    // MARK: - CloudKit
     func createContactZone(group: DispatchGroup) {
         if !self.createdCustomZone {
             group.enter()
@@ -996,8 +996,8 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         }
         
         operation.fetchRecordZoneChangesCompletionBlock = { (error) in
-            if let zoneChangesError = error as? CKError {
-                print("Error fetching zone changes for \(databaseTokenKey) database:", zoneChangesError)
+            if let error = error {
+                print("Error fetching zone changes for \(databaseTokenKey) database:", error)
             }
             
             completion()
