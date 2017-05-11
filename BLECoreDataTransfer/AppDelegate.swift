@@ -74,7 +74,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("Receive shared-record-zone notification and notification type is \(notification.notificationType)")
         } else if notification.subscriptionID == "private-changes" ||
             notification.subscriptionID == "shared-changes" {
-            guard let viewController = application.keyWindow?.rootViewController?.navigationController?.topViewController as? ContactListViewController else { return }
+            guard let count = application.keyWindow?.rootViewController?.childViewControllers.count, count > 0,
+                let viewController = application.keyWindow?.rootViewController?.childViewControllers[count - 1] as? ContactListViewController
+            else {
+                completionHandler(.newData)
+                return
+            }
             viewController.fetchChanges(in: notification.databaseScope) {
                 completionHandler(.newData)
             }

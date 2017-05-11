@@ -937,6 +937,7 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         operation.changeTokenUpdatedBlock = { (token) in
             // Flush zone deletions for this database to disk
             // Write this new database change token to memory
+            print("Change token updated is", token)
         }
         
         operation.fetchDatabaseChangesCompletionBlock = { (token, moreComing, error) in
@@ -973,16 +974,34 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         operation.recordChangedBlock = { (record) in
             print("Record changed:", record)
             // Write this record change to memory
+            // Create entity description
+            let recordId = record.recordID
+            let recordName = recordId.recordName
+            let zoneName = recordId.zoneID.zoneName
+            let range = recordName.range(of: "ContactID ")
+            if range?.lowerBound == range?.upperBound && zoneName != "ContactZone" { return }
+            let idString = recordName.substring(from: (range?.upperBound)!)
+            guard let id = Int32.init(idString) else { return }
+            
+            let entityDescription = NSEntityDescription.entity(forEntityName: "PersonEntity", in: self.managedObjectContext)
+            // Initialize contact
+            if let contact = NSManagedObject(entity: entityDescription!, insertInto: self.managedObjectContext) as? PersonEntity {
+                contact.id = id
+                contact.firstName = record["FirstName"] as? String
+                contact.lastName = record["LastName"] as? String
+            }
         }
         
         operation.recordWithIDWasDeletedBlock = { (recordId) in
             print("Record deleted:", recordId)
             // Write this record deletion to memory
+            
         }
         
         operation.recordZoneChangeTokensUpdatedBlock = { (zoneId, token, data) in
             // Flush record changes and deletions for this zone to disk
             // Write this new zone change token to disk
+            print("Record Zone Change Tokens Updated: zoneId = \(zoneId), token = \(String(describing: token)), data = \(String(describing: data))")
         }
         
         operation.recordZoneFetchCompletionBlock = { (zoneId, changeToken, _, _, error) in
@@ -1001,6 +1020,40 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             }
             
             completion()
+            
+            do {
+                try self.managedObjectContext.save()
+            } catch {
+                let saveError = error
+                print("Save Core Date error is", saveError)
+            }
+            
+            // Saving local data
+            guard let fetechObjects = self.fetchedResultsController.fetchedObjects else { return }
+            let recordZoneId = CKRecordZoneID(zoneName: "ContactZone", ownerName: CKCurrentUserDefaultName)
+            var newRecords: [CKRecord] = []
+            
+            for result in fetechObjects {
+                if let contact = result as? PersonEntity {
+                    let recordName = "ContactID \(contact.id)"
+                    let recordId = CKRecordID(recordName: recordName, zoneID: recordZoneId)
+                    let newRecord = CKRecord(recordType: "Contact", recordID: recordId)
+                    newRecord["FirstName"] = contact.firstName as NSString?
+                    newRecord["LastName"] = contact.lastName as NSString?
+                    
+                    newRecords.append(newRecord)
+                }
+            }
+            
+            let operation = CKModifyRecordsOperation(recordsToSave: newRecords, recordIDsToDelete: [])
+            operation.modifyRecordsCompletionBlock = { (records, deletes, error) in
+                if let error = error {
+                    print("Error in modify record", error)
+                }
+                
+            }
+            operation.qualityOfService = .userInitiated
+            self.privateDB.add(operation)
         }
         
         database.add(operation)
