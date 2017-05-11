@@ -243,5 +243,293 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BLECoreDataTransfer/AppDelegate.swift"
+            timestampString = "516131890.976516"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "65"
+            endingLineNumber = "65"
+            landmarkName = "application(_:didReceiveRemoteNotification:fetchCompletionHandler:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BLECoreDataTransfer/Core Data/ContactListViewController.swift"
+            timestampString = "516218407.706057"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1036"
+            endingLineNumber = "1036"
+            landmarkName = "fetchZoneChanges(database:databaseTokenKey:zoneIDs:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BLECoreDataTransfer.ContactListViewController.(fetchZoneChanges (database : __ObjC.CKDatabase, databaseTokenKey : Swift.String, zoneIDs : Swift.Array&lt;__ObjC.CKRecordZoneID&gt;, completion : () -&gt; ()) -&gt; ()).(closure #5)"
+                  moduleName = "BLECoreDataTransfer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/petho/Programs/CoreBluetooth/BLECoreDataTransfer/BLECoreDataTransfer/Core%20Data/ContactListViewController.swift"
+                  timestampString = "516219447.578503"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1036"
+                  endingLineNumber = "1036"
+                  offsetFromSymbolStart = "44">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BLECoreDataTransfer.ContactListViewController.(fetchZoneChanges (database : __ObjC.CKDatabase, databaseTokenKey : Swift.String, zoneIDs : Swift.Array&lt;__ObjC.CKRecordZoneID&gt;, completion : () -&gt; ()) -&gt; ()).(closure #5)"
+                  moduleName = "BLECoreDataTransfer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/petho/Programs/CoreBluetooth/BLECoreDataTransfer/BLECoreDataTransfer/Core%20Data/ContactListViewController.swift"
+                  timestampString = "516219447.5798"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1036"
+                  endingLineNumber = "1036"
+                  offsetFromSymbolStart = "100">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BLECoreDataTransfer/Core Data/ContactListViewController.swift"
+            timestampString = "516218407.706057"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1026"
+            endingLineNumber = "1026"
+            landmarkName = "fetchZoneChanges(database:databaseTokenKey:zoneIDs:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BLECoreDataTransfer/Core Data/ContactListViewController.swift"
+            timestampString = "516218407.706057"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "960"
+            endingLineNumber = "960"
+            landmarkName = "fetchDatabaseChanges(database:databaseTokenKey:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BLECoreDataTransfer/Core Data/ContactListViewController.swift"
+            timestampString = "516218407.706057"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "897"
+            endingLineNumber = "897"
+            landmarkName = "subscribeChangeNotification(group:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BLECoreDataTransfer/Core Data/ContactListViewController.swift"
+            timestampString = "516218407.706057"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "885"
+            endingLineNumber = "885"
+            landmarkName = "createDatabaseSubscriptionOperation(subscriptionId:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BLECoreDataTransfer.ContactListViewController.(createDatabaseSubscriptionOperation (subscriptionId : Swift.String) -&gt; __ObjC.CKModifySubscriptionsOperation).(closure #1)"
+                  moduleName = "BLECoreDataTransfer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/petho/Programs/CoreBluetooth/BLECoreDataTransfer/BLECoreDataTransfer/Core%20Data/ContactListViewController.swift"
+                  timestampString = "516219447.590053"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "885"
+                  endingLineNumber = "885"
+                  offsetFromSymbolStart = "28">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BLECoreDataTransfer.ContactListViewController.(createDatabaseSubscriptionOperation (subscriptionId : Swift.String) -&gt; __ObjC.CKModifySubscriptionsOperation).(closure #1)"
+                  moduleName = "BLECoreDataTransfer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/petho/Programs/CoreBluetooth/BLECoreDataTransfer/BLECoreDataTransfer/Core%20Data/ContactListViewController.swift"
+                  timestampString = "516219447.591255"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "885"
+                  endingLineNumber = "885"
+                  offsetFromSymbolStart = "200">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BLECoreDataTransfer/Core Data/ContactListViewController.swift"
+            timestampString = "516218407.706057"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "865"
+            endingLineNumber = "865"
+            landmarkName = "createContactZone(group:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BLECoreDataTransfer/Core Data/ContactListViewController.swift"
+            timestampString = "516218407.706057"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1070"
+            endingLineNumber = "1070"
+            landmarkName = "fetchZoneChanges(database:databaseTokenKey:zoneIDs:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BLECoreDataTransfer.ContactListViewController.(fetchZoneChanges (database : __ObjC.CKDatabase, databaseTokenKey : Swift.String, zoneIDs : Swift.Array&lt;__ObjC.CKRecordZoneID&gt;, completion : () -&gt; ()) -&gt; ()).(closure #5).(closure #1)"
+                  moduleName = "BLECoreDataTransfer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/petho/Programs/CoreBluetooth/BLECoreDataTransfer/BLECoreDataTransfer/Core%20Data/ContactListViewController.swift"
+                  timestampString = "516219447.596461"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1070"
+                  endingLineNumber = "1070"
+                  offsetFromSymbolStart = "24">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BLECoreDataTransfer.ContactListViewController.(fetchZoneChanges (database : __ObjC.CKDatabase, databaseTokenKey : Swift.String, zoneIDs : Swift.Array&lt;__ObjC.CKRecordZoneID&gt;, completion : () -&gt; ()) -&gt; ()).(closure #5).(closure #1)"
+                  moduleName = "BLECoreDataTransfer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/petho/Programs/CoreBluetooth/BLECoreDataTransfer/BLECoreDataTransfer/Core%20Data/ContactListViewController.swift"
+                  timestampString = "516219447.597722"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1070"
+                  endingLineNumber = "1070"
+                  offsetFromSymbolStart = "68">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BLECoreDataTransfer/Core Data/ContactListViewController.swift"
+            timestampString = "516218407.706057"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1052"
+            endingLineNumber = "1052"
+            landmarkName = "fetchZoneChanges(database:databaseTokenKey:zoneIDs:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BLECoreDataTransfer/Core Data/ContactListViewController.swift"
+            timestampString = "516218407.706057"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1068"
+            endingLineNumber = "1068"
+            landmarkName = "fetchZoneChanges(database:databaseTokenKey:zoneIDs:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BLECoreDataTransfer/Core Data/ContactListViewController.swift"
+            timestampString = "516218407.706057"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1043"
+            endingLineNumber = "1043"
+            landmarkName = "fetchZoneChanges(database:databaseTokenKey:zoneIDs:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BLECoreDataTransfer/Core Data/ContactListViewController.swift"
+            timestampString = "516219434.31826"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "160"
+            endingLineNumber = "160"
+            landmarkName = "verifyiCloudAccount()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

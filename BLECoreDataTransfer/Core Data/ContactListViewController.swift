@@ -152,6 +152,28 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         }
         
         // Do any additional setup after loading the view.
+        verifyiCloudAccount()
+    }
+    
+    func verifyiCloudAccount() {
+        CKContainer.default().accountStatus() { (accountStatus, error) in
+            if let error = error {
+                print("Verify iCloud account error:", error)
+                return
+            }
+            
+            if accountStatus == .available {
+                print("createdCustomZone is \(self.createdCustomZone)")
+                
+                let createZoneGroup = DispatchGroup()
+                
+                self.createContactZone(group: createZoneGroup)
+                self.subscribeChangeNotification(group: createZoneGroup)
+            }
+        }
+    }
+    
+    func testiCloud() {
         let customZone = CKRecordZone(zoneName: "TestZone1")
         let zoneOperation = CKModifyRecordZonesOperation(recordZonesToSave: [customZone], recordZoneIDsToDelete: [])
         zoneOperation.modifyRecordZonesCompletionBlock = { (recordZones: [CKRecordZone]?, zoneIDs: [CKRecordZoneID]?, error: Error?) -> Void in
@@ -178,25 +200,25 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             })
         }
         CKContainer.default().privateCloudDatabase.add(zoneOperation)
-
+        
         let zoneId = CKRecordZoneID(zoneName: "TestZone1", ownerName: CKCurrentUserDefaultName)
-/*        // Delete custom zone
-        let deleteZoneOperation = CKModifyRecordZonesOperation(recordZonesToSave: [], recordZoneIDsToDelete: [zoneId])
-        deleteZoneOperation.modifyRecordZonesCompletionBlock = { (recordZones: [CKRecordZone]?, zoneIDs: [CKRecordZoneID]?, error: Error?) -> Void in
-            if let deleteZoneError = error as? CKError {
-                print("Delete custome zone error is \(deleteZoneError.localizedDescription)")
-                return
-            }
-            print("Successfully delete custom zone")
-        }
-        CKContainer.default().privateCloudDatabase.add(deleteZoneOperation)
-*/
+        /*        // Delete custom zone
+         let deleteZoneOperation = CKModifyRecordZonesOperation(recordZonesToSave: [], recordZoneIDsToDelete: [zoneId])
+         deleteZoneOperation.modifyRecordZonesCompletionBlock = { (recordZones: [CKRecordZone]?, zoneIDs: [CKRecordZoneID]?, error: Error?) -> Void in
+         if let deleteZoneError = error as? CKError {
+         print("Delete custome zone error is \(deleteZoneError.localizedDescription)")
+         return
+         }
+         print("Successfully delete custom zone")
+         }
+         CKContainer.default().privateCloudDatabase.add(deleteZoneOperation)
+         */
         let contactId = CKRecordID(recordName: "Iris Yu", zoneID: zoneId)
-//        let contact = CKRecord(recordType: "Contact", zoneID: zoneId)
+        //        let contact = CKRecord(recordType: "Contact", zoneID: zoneId)
         let contact = CKRecord(recordType: "Contact", recordID: contactId)
         contact["FirstName"] = "Iris" as NSString
         contact["LastName"] = "Yu" as NSString
-        contact["Modified"] = Date() as NSDate
+        contact["ModifiedTime"] = Date() as NSDate
         
         CKContainer.default().privateCloudDatabase.save(contact, completionHandler: { (record, error) -> Void in
             if let saveError = error as? CKError {
@@ -235,21 +257,21 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
         notificationInfo.shouldSendContentAvailable = true
         subscription.notificationInfo = notificationInfo
         
-//        let operation = CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: [])
-//        operation.modifySubscriptionsCompletionBlock = { (subscriptions: [CKSubscription]?, names: [String]?, error: Error?) -> Void in
-//            // labor-of-love error handling when error != nil
-//            if let subscriptionError = error {
-//                print("Subscription error is \(subscriptionError.localizedDescription)")
-//            }
-//            guard let subscriptions = subscriptions, let names = names else {
-//                return
-//            }
-//            for name in names {
-//                print("Successfully subscribe \(name)")
-//            }
-//        }
-//        operation.qualityOfService = .utility
-//        CKContainer.default().privateCloudDatabase.add(operation)
+        //        let operation = CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: [])
+        //        operation.modifySubscriptionsCompletionBlock = { (subscriptions: [CKSubscription]?, names: [String]?, error: Error?) -> Void in
+        //            // labor-of-love error handling when error != nil
+        //            if let subscriptionError = error {
+        //                print("Subscription error is \(subscriptionError.localizedDescription)")
+        //            }
+        //            guard let subscriptions = subscriptions, let names = names else {
+        //                return
+        //            }
+        //            for name in names {
+        //                print("Successfully subscribe \(name)")
+        //            }
+        //        }
+        //        operation.qualityOfService = .utility
+        //        CKContainer.default().privateCloudDatabase.add(operation)
         
         // Record Zone Subscription
         let recordZoneSubscription = CKRecordZoneSubscription(zoneID: zoneId, subscriptionID: "shared-record-zone")
@@ -279,12 +301,6 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
             print("Successfully subscribe \(String(describing: subscription?.subscriptionID))")
         })
         
-        print("createdCustomZone is \(createdCustomZone)")
-        
-        let createZoneGroup = DispatchGroup()
-        
-        createContactZone(group: createZoneGroup)
-        subscribeChangeNotification(group: createZoneGroup)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -989,6 +1005,8 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
                 contact.id = id
                 contact.firstName = record["FirstName"] as? String
                 contact.lastName = record["LastName"] as? String
+                contact.createdTime = record["CreatedTime"] as? NSDate
+                contact.modifiedTime = record["ModifiedTime"] as? NSDate
             }
         }
         
@@ -1040,6 +1058,8 @@ class ContactListViewController: UIViewController, NSFetchedResultsControllerDel
                     let newRecord = CKRecord(recordType: "Contact", recordID: recordId)
                     newRecord["FirstName"] = contact.firstName as NSString?
                     newRecord["LastName"] = contact.lastName as NSString?
+                    newRecord["CreatedTime"] = contact.createdTime as NSDate?
+                    newRecord["ModifiedTime"] = contact.modifiedTime as NSDate?
                     
                     newRecords.append(newRecord)
                 }
